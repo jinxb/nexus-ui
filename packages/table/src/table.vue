@@ -13,7 +13,6 @@
       @fixedChange="fixedChange"
       @checkChange="checkChange"
       @filterSort="filterSort"
-      @clearForm="clearForm"
     />
     <keep-alive>
       <InitColor
@@ -253,11 +252,11 @@ export default {
 }
 </script>
 
-<script lang="ts" setup >
+<script setup lang="ts">
 import TableFilter from './filter-x.vue'
 import InitColor from './initColor.vue'
 import db from '../../db/db'
-import { reactive, computed, watch, nextTick, ref, onMounted, useAttrs, PropType, Ref } from 'vue'
+import { reactive, computed, watch, nextTick, ref, onMounted, useAttrs, PropType } from 'vue'
 
 import { VxeTableInstance, VxeTablePropTypes } from 'vxe-table';
 import { IOperateData, ITableTh } from './types';
