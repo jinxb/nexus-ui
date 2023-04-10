@@ -1,88 +1,19 @@
-<template>
-  <div class="ls-tab">
-    <div class="left">
-      <el-input
-        v-model.trim="data.searchText"
-        placeholder="请输入搜索内容"
-        class="input-with-select"
-        style="width: 200px"
+<script lang='ts'>
+export default {
+  name: 'NxTab'
+}
+</script>
+<script setup lang='ts'>
+import { reactive, watchEffect } from 'vue';
+import type { IBtnListType, IScreenData } from './types';
 
-        :prefix-icon="Search"
-        clearable
-        @change="onSearchChange"
-      />
-      <template v-for="(item,index) in props.screenData" :key="index">
-        <span class="label" v-if="item.label">{{item.label}}</span>
-        <el-select  style="width:120px;" v-bind="item" :clearable="item.clearable" @change="onSelectChange($event,item.key)"  v-model="data.page[item.key]" :placeholder="item.placeholder||'请选择'" v-if="item.type==='select'">
-          <el-option v-for="item in item.options" :key="item.value" v-bind="item">
-          </el-option>
-        </el-select>
-        <el-date-picker
-
-          v-if="item.type==='date'"
-          v-model="data.page[item.key]"
-          v-bind="item"
-          type="daterange"
-          style="width: 240px"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          value-format="YYYY-MM-DD"
-          @change="onSelectChange($event,item.key)"
-        >
-        </el-date-picker>
-        <template v-if="item.type==='selection'">
-          <el-select
-            v-model="data.page[item.key]"
-
-            class="ls-tabSelection"
-            style="margin-left:24px;"
-            :style="{width:item.width}"
-            placeholder="请选择"
-            @change="onSelectChange($event,item.key)"
-          >
-            <el-option
-              v-for="obj in item.selection"
-              :key="obj.value"
-              v-bind="obj"
-            />
-          </el-select>
-          <el-date-picker
-            v-model="data.page.date"
-
-            style="width:240px;"
-            type="daterange"
-            align="left"
-            :clearable="item.clearable===false?false:true"
-            unlink-panels
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            value-format="YYYY-MM-DD"
-            :picker-options="item.pickerOptions"
-            @change="onSelectChange($event,'date')"
-          />
-        </template>
-        <el-input  style="width:120px;" @change="onSelectChange($event,item.key)" clearable v-if="item.type==='input'" v-model.trim="data.page[item.key]" :placeholder="item.placeholder||'请输入'" />
-      </template>
-      <slot name="left"/>
-    </div>
-    <div class="right">
-      <slot name="right"/>
-    </div>
-  </div>
-</template>
-
-<script setup>
-import { defineProps, defineEmits, reactive, watchEffect } from 'vue'
-import { Search } from '@element-plus/icons-vue'
 const props = defineProps({
-  searchText: {
-    type: String,
-    default: ''
+  btnList: {
+    type: Array<IBtnListType>,
+    default: () => []
   },
   screenData: {
-    type: Array,
+    type: Array as () => IScreenData[],
     default: () => []
   },
   page: {
@@ -90,44 +21,119 @@ const props = defineProps({
     default: () => {}
   }
 })
+const emit = defineEmits<{
+  (e: string, value?: any): void
+  }>()
 const data = reactive({
-  searchText: '',
-  page: { }
+  page: {}
 })
+
 watchEffect(() => {
-  data.searchText = props.searchText
   data.page = props.page || {}
 })
-const emit = defineEmits()
-const onSearchChange = value => {
-  emit('update:searchText', value)
-  emit('filterChange')
-}
+
 const onSelectChange = (value, key) => {
   emit(`update:page[${key}]`, value)
   emit('filterChange')
 }
+
+const handleClear = () => {
+  for (const key in data.page) {
+    data.page[key] = ''
+  }
+  emit('filterChange')
+}
+
+const handleQuery = () => {
+  emit('filterChange')
+}
+
 </script>
 
-<style lang="less">
-.ls-tab {
+<template>
+  <div class="nx-tab">
+    <div class="btn-list">
+      <template v-for="(item, index) in props.btnList" :key="index">
+        <el-button v-show="item.show" :size="item.size || 'small'" :disabled="item.disabled" :type="item.type || 'primary'" v-bind="item.options" @click="item.cb()">{{ item.name }}</el-button>
+      </template>
+      <slot name="funBtn"/>
+    </div>
+    <div class="form-search">
+      <template v-for="(item,index) in props.screenData" :key="index">
+        <div class="form-block">
+          <div class="form-block-label" :style="{width:(item.width || 130)+'px'}" >
+            <span class="label" v-if="item.label">{{item.label}}</span>
+          </div>
+        <el-select  :style="{width:(item.width || 240)+'px'}" v-bind="item" :clearable="item.clearable" @change="onSelectChange($event,item.key)"  v-model="data.page[item.key]" :placeholder="item.placeholder||'请选择'" v-if="item.type==='select'">
+          <el-option v-for="itemB in item.options" :key="itemB.value" v-bind="itemB">
+          </el-option>
+        </el-select>
+        <el-date-picker
+          v-if="item.type==='date'"
+          v-model="data.page[item.key]"
+          v-bind="item"
+          type="daterange"
+          :style="{width:(item.width || 240)+'px'}"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="YYYY-MM-DD"
+          @change="onSelectChange($event,item.key)"
+        >
+        </el-date-picker>
+        <el-input  :style="{width: (item.width || 240)+'px' }" @change="onSelectChange($event,item.key)" clearable v-if="item.type==='input'" v-model.trim="data.page[item.key]" :placeholder="item.placeholder||'请输入'" />
+        </div>
+      </template>
+      <slot name="other"/>
+    </div>
+    <div class="search-btn" :style="{'margin-left': `calc(${data.page['search_left_width'] || '130px'}`}">
+      <el-button class="btn" type="primary" size="mini" plain @click="handleClear">清空</el-button>
+      <el-button class="btn" type="primary" size="mini" @click="handleQuery">查询</el-button>
+    </div>
+  </div>
+</template>
+
+<style lang='scss' scoped>
+:deep(.el-input__inner), :deep(.el-range-separator) {
+  height: 28px;
+}
+:deep(.el-input--suffix),:deep(.el-input__icon), :deep(.el-range-separator) {
+  line-height: 28px;
+}
+.nx-tab {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  width: 100%;
   margin-bottom: 8px;
-  .left {
-    flex: 1;
+  box-sizing: border-box;
+  .btn-list, .search-btn {
+    margin-left: 2.4rem;
+  }
+  .form-search {
     display: flex;
-    align-items: center;
-    .label {
-      margin: 0 8px 0 24px;
-    }
-    .ls-tabSelection{
-      margin-right:8px;
-      width:96px;
-      :deep(.el-input__inner){
-        padding-right: 15px;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+    box-sizing: border-box;
+    .form-block {
+      display: flex;
+      align-items: center;
+      margin-bottom: .5rem;
+      .form-block-label {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        width: 100%;
+        height: 100%;
       }
     }
+  }
+  .search-btn {
+    .btn {
+      width: 70px;
+    }
+  }
+  .label {
+    margin: 0 8px 0 24px;
   }
 }
 </style>

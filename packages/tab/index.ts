@@ -1,10 +1,10 @@
 import type { App } from 'vue'
 
-import PmoTab from './src/tab2.vue'
+import NxTab from './src/tab.vue'
 
-PmoTab.install = function (app: App) {
-  app.component(PmoTab.name, PmoTab)
+NxTab.name = 'NxTab'
+NxTab.install = function (app: App) {
+  app.component(NxTab.name, NxTab)
 }
-PmoTab.name = 'pTab'
 
-export default PmoTab
+export default NxTab

@@ -3,6 +3,7 @@ export interface IBtnListType {
   size?: string
   type?: string
   show: boolean
+  cb: Function
   disabled?: boolean
   options?: {
     plain?: boolean
@@ -13,10 +14,6 @@ export interface IBtnListType {
   }
 }
 
-type optionsType = {
-  label: string
-  value: string
-}
 export interface IScreenData {
   label?: string
   type: string
@@ -24,6 +21,8 @@ export interface IScreenData {
   placeholder?: string
   width?: string
   clearable?: boolean
-  // selection?: options[]
-  options?: optionsType[]
+  options?: {
+    label: string
+    value: string
+  }[]
 }
