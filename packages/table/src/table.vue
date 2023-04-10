@@ -256,10 +256,10 @@ export default {
 import TableFilter from './filter-x.vue'
 import InitColor from './initColor.vue'
 import db from '../../db/db'
-import { reactive, computed, watch, nextTick, ref, onMounted, useAttrs, PropType } from 'vue'
+import { reactive, computed, watch, nextTick, ref, onMounted, useAttrs, type PropType } from 'vue'
 
-import { VxeTableInstance, VxeTablePropTypes } from 'vxe-table';
-import { IOperateData, ITableTh } from './types';
+import type { VxeTableInstance, VxeTablePropTypes } from 'vxe-table';
+import type { IOperateData, ITableTh } from './types';
 
 const emit = defineEmits<{
   (e:string, value?:any, params?: any):void

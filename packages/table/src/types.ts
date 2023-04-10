@@ -1,4 +1,4 @@
-import { VxeTablePropTypes } from 'vxe-table'
+import type { VxeTablePropTypes } from 'vxe-table'
 
 export interface ITableTh {
   field: string // 表头单元格绑定的字段名

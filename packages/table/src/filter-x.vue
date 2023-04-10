@@ -54,8 +54,8 @@
 <script setup lang="ts">
 import db from '../../db/db'
 import Sortable from 'sortablejs'
-import { watch, ref, nextTick, toRefs } from 'vue'
-import { ITableTh } from './types';
+import { watch, ref, nextTick } from 'vue'
+import type { ITableTh } from './types';
 const props = defineProps({
   th: {
     type: Array<ITableTh>,
