@@ -45,12 +45,15 @@ class IndexDB {
    * @param name 表名
    */
   async set(key, val, name = 'table') {
-    const db = await this.open()
+    const db = (await this.open()) as IDBDatabase
     return new Promise((resolve, reject) => {
-      const dbRequest = db.transaction([name], 'readwrite').objectStore(name).put(val, key)
+      const dbRequest = db
+        .transaction([name], 'readwrite')
+        .objectStore(name)
+        .put(val, key)
 
       dbRequest.onsuccess = () => {
-        resolve(request.resolve)
+        resolve(dbRequest.result)
       }
       dbRequest.onerror = (err) => {
         reject(err)
@@ -63,7 +66,7 @@ class IndexDB {
    * @param {Number} key
    */
   async get(key, name = 'table') {
-    const db = await this.openDB()
+    const db = (await this.open()) as IDBDatabase
     return new Promise((resolve, reject) => {
       const request = db.transaction([name]).objectStore(name).get(key)
       request.onsuccess = () => {
@@ -79,9 +82,12 @@ class IndexDB {
    * @param {Any} key
    */
   async remove(key, name = 'table') {
-    const db = await this.openDB()
-    return new Promise((resolve, reject) => {
-      const request = db.transaction([name], 'readwrite').objectStore(name).delete(key)
+    const db = (await this.open()) as IDBDatabase
+    return new Promise<void>((resolve, reject) => {
+      const request = db
+        .transaction([name], 'readwrite')
+        .objectStore(name)
+        .delete(key)
       request.onsuccess = function () {
         resolve()
       }
@@ -94,9 +100,12 @@ class IndexDB {
    * @param {String} name 表名
    */
   async clear(name = 'table') {
-    const db = await this.openDB()
-    return new Promise((resolve, reject) => {
-      const request = db.transaction([name], 'readwrite').objectStore(name).clear()
+    const db = (await this.open()) as IDBDatabase
+    return new Promise<void>((resolve, reject) => {
+      const request = db
+        .transaction([name], 'readwrite')
+        .objectStore(name)
+        .clear()
       request.onsuccess = function () {
         resolve()
       }
