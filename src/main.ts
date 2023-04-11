@@ -7,6 +7,10 @@ import 'vxe-table/lib/style.css'
 
 import locale from 'element-plus/lib/locale/lang/zh-cn'
 import 'element-plus/lib/theme-chalk/index.css'
+
+import { Nxui } from '@jinxb/nexus-ui'
+import '@jinxb/nexus-ui/style.css'
+
 import { Rank } from '@element-plus/icons-vue'
 
 import App from './App.vue'
@@ -20,6 +24,7 @@ for (const [key, component] of Object.entries(icons)) {
 }
 app.use(VXETable)
 app.use(ElementPlus, { locale })
+app.use(Nxui)
 app.use(createPinia())
 app.use(router)
 

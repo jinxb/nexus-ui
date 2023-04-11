@@ -1,7 +1,5 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from 'vue';
-import tab from '../../packages/tab/src/tab.vue';
-import nxTable from '../../packages/table/index';
 import type { IScreenData } from '../../packages/tab/src/types';
 import type { ITableTh } from '../../packages/table/src/types';
 
@@ -64,7 +62,7 @@ const filterChange = () => {
 const table = ref(null)
 const tableData = reactive({
   th: [
-    { field: 'checkbox', type: 'checkbox'},
+    { field: 'checkbox', width: 50, type: 'checkbox'},
     { field: 'id', title: '序号' },
     { field: 'name', title: '序号2' },
     { field: 'role', title: '序号3' },
@@ -88,7 +86,7 @@ function scrollLoad(params) {
 }
 async function getList() {
   tableData.loading = true
-  const data = await findList(20) as []
+  const data = await findList(30) as []
   tableData.tr = [
     ...tableData.tr,
     ...data
@@ -123,8 +121,8 @@ onMounted(() => {
 </script>
 <template>
   <div class="about">
-    <tab @filterChange="filterChange" :btnList="funBtns" :screenData="screenData" v-model:page="page">
-    </tab>
+    <nx-tab @filterChange="filterChange" :btnList="funBtns" :screenData="screenData" v-model:page="page">
+    </nx-tab>
     <div style="height: calc(100% - 140px)">
       <nx-table @scrollLoad="scrollLoad" ref="table" v-bind="tableData" class="table">
     </nx-table>
