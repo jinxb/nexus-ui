@@ -125,7 +125,7 @@ onMounted(() => {
   <div class="about">
     <tab @filterChange="filterChange" :btnList="funBtns" :screenData="screenData" v-model:page="page">
     </tab>
-    <div style="height: calc(100% - 130px)">
+    <div style="height: calc(100% - 140px)">
       <nx-table @scrollLoad="scrollLoad" ref="table" v-bind="tableData" class="table">
     </nx-table>
     </div>

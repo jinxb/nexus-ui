@@ -7,14 +7,15 @@ import 'vxe-table/lib/style.css'
 
 import locale from 'element-plus/lib/locale/lang/zh-cn'
 import 'element-plus/lib/theme-chalk/index.css'
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import { Rank } from '@element-plus/icons-vue'
 
 import App from './App.vue'
 import router from './router'
 import './assets/style.scss'
 const app = createApp(App)
 
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+const icons = { Rank }
+for (const [key, component] of Object.entries(icons)) {
   app.component(key, component)
 }
 app.use(VXETable)
