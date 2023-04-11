@@ -44,7 +44,7 @@ class IndexDB {
    * @param val
    * @param name 表名
    */
-  async set(key, val, name = 'table') {
+  async set(key: string, val: any, name = 'table') {
     const db = (await this.open()) as IDBDatabase
     return new Promise((resolve, reject) => {
       const dbRequest = db.transaction([name], 'readwrite').objectStore(name).put(val, key)
@@ -62,7 +62,7 @@ class IndexDB {
    * @param name 表名
    * @param key
    */
-  async get(key, name = 'table') {
+  async get(key: string, name = 'table') {
     const db = (await this.open()) as IDBDatabase
     return new Promise((resolve, reject) => {
       const request = db.transaction([name]).objectStore(name).get(key)
@@ -78,7 +78,7 @@ class IndexDB {
    * @param name 表名
    * @param key
    */
-  async remove(key, name = 'table') {
+  async remove(key: string, name = 'table') {
     const db = (await this.open()) as IDBDatabase
     return new Promise<void>((resolve, reject) => {
       const request = db.transaction([name], 'readwrite').objectStore(name).delete(key)
