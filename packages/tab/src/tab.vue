@@ -104,11 +104,11 @@ const handleQuery = () => {
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-bottom: 8px;
+  padding: 10px 0 8px 10px;
   box-sizing: border-box;
-  .btn-list, .search-btn {
-    margin-left: 2.4rem;
-  }
+  // .btn-list, .search-btn {
+  //   margin-left: 2.4rem;
+  // }
   .form-search {
     display: flex;
     flex-wrap: wrap;
