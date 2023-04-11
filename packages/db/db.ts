@@ -47,10 +47,7 @@ class IndexDB {
   async set(key, val, name = 'table') {
     const db = (await this.open()) as IDBDatabase
     return new Promise((resolve, reject) => {
-      const dbRequest = db
-        .transaction([name], 'readwrite')
-        .objectStore(name)
-        .put(val, key)
+      const dbRequest = db.transaction([name], 'readwrite').objectStore(name).put(val, key)
 
       dbRequest.onsuccess = () => {
         resolve(dbRequest.result)
@@ -62,8 +59,8 @@ class IndexDB {
   }
 
   /**
-   * @param {String} name 表名
-   * @param {Number} key
+   * @param name 表名
+   * @param key
    */
   async get(key, name = 'table') {
     const db = (await this.open()) as IDBDatabase
@@ -78,16 +75,13 @@ class IndexDB {
     })
   }
   /**
-   * @param {String} name 表名
-   * @param {Any} key
+   * @param name 表名
+   * @param key
    */
   async remove(key, name = 'table') {
     const db = (await this.open()) as IDBDatabase
     return new Promise<void>((resolve, reject) => {
-      const request = db
-        .transaction([name], 'readwrite')
-        .objectStore(name)
-        .delete(key)
+      const request = db.transaction([name], 'readwrite').objectStore(name).delete(key)
       request.onsuccess = function () {
         resolve()
       }
@@ -97,15 +91,12 @@ class IndexDB {
     })
   }
   /**
-   * @param {String} name 表名
+   * @param name 表名
    */
   async clear(name = 'table') {
     const db = (await this.open()) as IDBDatabase
     return new Promise<void>((resolve, reject) => {
-      const request = db
-        .transaction([name], 'readwrite')
-        .objectStore(name)
-        .clear()
+      const request = db.transaction([name], 'readwrite').objectStore(name).clear()
       request.onsuccess = function () {
         resolve()
       }
