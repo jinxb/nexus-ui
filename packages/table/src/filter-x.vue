@@ -40,7 +40,7 @@
                     @change="checkChange(item)">
                     {{ item.title }}
                   </el-checkbox>
-                  <i v-if="!item.fixed" class="icon-drags" :class="{ drag: !item.fixed }"
+                  <i v-if="!item.fixed" class="iconfont icon-rank" :class="{ drag: !item.fixed }"
                     style="color: #c0c4cc; margin-left: 10px; font-size: 18px; margin-right: 0" />
                 </el-dropdown-item>
               </template>
@@ -178,7 +178,6 @@ const initDropdownData = async () => {
     }
     return props.th
   } catch (err) {
-    console.log('组件初始化失败！')
     return props.th
   }
 }
