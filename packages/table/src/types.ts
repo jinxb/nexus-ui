@@ -27,20 +27,4 @@ export interface ITableTh {
   ]
 }
 
-export interface IOperateData {
-  key:
-    | 'styleChange'
-    | 'update:page'
-    | 'pageChange'
-    | 'headerChange'
-    | 'update:th'
-    | 'filter-confirm'
-    | 'scrollLoad'
-
-  title: string
-  color?: string
-  type?: 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'default'
-  underline?: boolean
-}
-
 export type TShowOverflow = VxeTablePropTypes.ShowOverflow | undefined
