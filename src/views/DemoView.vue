@@ -2,7 +2,9 @@
 import { onMounted, reactive, ref } from 'vue';
 import type { IScreenData } from '../../packages/tab/src/types';
 import type { ITableTh } from '../../packages/table/src/types';
-
+import tabA from '../../packages/tab/src/tab.vue';
+import NxTabs from '../../packages/tabs/src/tabs.vue';
+import NxTable from '../../packages/table/src/table.vue';
 const page = reactive({
   select: '',
   inputVal1: '',
@@ -14,10 +16,20 @@ const page = reactive({
 const btn1 = () => {
     console.log('args');
 }
+const tabs = [
+  {
+    name: '标签a',
+    label: '标签a'
+  },
+  {
+    name: '标签b',
+    label: '标签b'
+  }
+]
 const funBtns = reactive([
   {
     name: '按钮1按钮1按钮1',
-    show: true,
+    show: false,
     cb: () => btn1
   },
   {
@@ -29,7 +41,7 @@ const funBtns = reactive([
 
 const screenData = reactive([
   {
-    label: '选择',
+    label: '渠道商品编码',
     type: 'select',
     key: 'select',
     placeholder: '111',
@@ -45,7 +57,7 @@ const screenData = reactive([
     ] 
   },
   {
-    label: '日期',
+    label: 'D1M商品编码',
     type: 'date',
     key: 'date'
   },
@@ -53,21 +65,30 @@ const screenData = reactive([
     label: 'D1M仓库名称',
     type: 'input',
     key: 'inputVal1'
+  },
+  {
+    label: 'D1M仓库名称2',
+    type: 'input',
+    key: 'inputVal1'
+  },
+  {
+    label: 'D1M仓库名称3',
+    type: 'input',
+    key: 'inputVal1'
+  },
+  {
+    label: 'D1M仓库名称4',
+    type: 'input',
+    key: 'inputVal1'
   }
 ]) as IScreenData[]
 const filterChange = () => {
   console.log(page, '----------------------------------')
 }
-
+type NxTableProps = InstanceType<typeof NxTable>["$props"];
 const table = ref(null)
-const tableData = reactive({
-  th: [
-    { field: 'checkbox', width: 50, type: 'checkbox'},
-    { field: 'id', title: '序号' },
-    { field: 'name', title: '序号2' },
-    { field: 'role', title: '序号3' },
-    { field: 'age', title: '序号4' },
-  ] as ITableTh[],
+const tableData: NxTableProps = reactive({
+  th: [] as ITableTh[],
   tr: [],
   showSum: true,
   // showPage: true,
@@ -75,10 +96,26 @@ const tableData = reactive({
     pageNum: 0,
     pageSize: 50
   },
+  operateColumn: true,
+  operateFixed: true,
+  operateWidth: '120',
   total: 999,
-  loading: false,
-  cacheKey: 'test'
+  loading: false
 })
+
+const setData = (tab: string) => {
+  let flag = tabs[0].name
+  const th = [
+    { field: 'checkbox', width: 50, type: 'checkbox'},
+    { field: 'id', title: '序号', handleClickShow: false },
+    { field: 'name', title: '序号2', show: tab === flag },
+    { field: 'role', title: '序号3' },
+    { field: 'age', title: '序号4' },
+  ] as ITableTh[]
+  tableData.th = th
+  tableData.cacheKey = 'Nx-table' + tab
+}
+setData(tabs[0].name)
 function scrollLoad(params) {
   console.log(params, '----------')
   if (tableData.loading) return
@@ -115,17 +152,33 @@ function findList(size) {
     }, 250)
   })
 }
+const handleChange = (name) => {
+  setData(name)
+}
+const handleClick = (...args) => {
+  console.log(args, '----------------');
+}
 onMounted(() => {
   getList()
 })
 </script>
 <template>
   <div class="about">
-    <nx-tab @filterChange="filterChange" :btnList="funBtns" :screenData="screenData" v-model:page="page">
-    </nx-tab>
-    <div style="height: calc(100% - 140px)">
-      <nx-table @scrollLoad="scrollLoad" ref="table" v-bind="tableData" class="table">
-    </nx-table>
+    <nx-tabs :data="tabs" @change="handleChange">
+    </nx-tabs>
+    <tab-a @filterChange="filterChange" :btnList="funBtns" :screenData="screenData" v-model:page="page">
+      <template #search_right>
+        <el-button class="btn" type="primary" size="mini" >清空</el-button>
+      </template>
+    </tab-a>
+    <div style="height: calc(100% - 140px - 40px)">
+      <nx-table @scrollLoad="scrollLoad" ref="table" v-bind="tableData" @handleClick="handleClick" class="table">
+        <template #operate_slot="{scope}">
+          <div>
+            <button @click="handleClick(scope)">按钮</button>
+          </div>
+        </template>
+      </nx-table>
     </div>
   </div>
 </template>
