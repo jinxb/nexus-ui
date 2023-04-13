@@ -194,7 +194,7 @@
         </template>
       </template>
       <vxe-table-column
-        v-if="props.operateData"
+        v-if="props.operateColumn"
         key="operate"
         title="操作"
         :fixed="props.operateFixed"
@@ -204,20 +204,6 @@
         <template #default="scope">
           <div>
             <slot name="operate_slot" :scope="scope">
-              <div style="display:flex;justify-content:space-around;" @click.stop>
-                <template v-for="(link,id) in props.operateData">
-                  <el-link
-                    v-if="scope.row[`${link.key}Show`] !== false"
-                    :key="id"
-                    :disabled="scope.row[`${link.key}Disabled`]"
-                    :class="{ disabled: scope.row[`${link.key}Disabled`] }"
-                    :underline="link.underline ? link.underline : false"
-                    :type="link.type ? link.type : 'primary'"
-                    :style="{ color: link.color }"
-                    @click.stop="emit(link.key, scope.row, scope.$index)"
-                  >{{ link.title }}</el-link>
-                </template>
-              </div>
             </slot>
           </div>
         </template>
@@ -259,7 +245,7 @@ import db from '../../db/db'
 import { reactive, computed, watch, nextTick, ref, onMounted, useAttrs, type PropType } from 'vue'
 
 import type { VxeTableInstance, VxeTablePropTypes } from 'vxe-table';
-import type { IOperateData, ITableTh } from './types';
+import type { ITableTh } from './types';
 
 const emit = defineEmits<{
   (e:string, value?:any, params?: any):void
@@ -282,9 +268,9 @@ const props = defineProps({
     type: Object,
     default: () => {}
   },
-  operateData: {
-    type: Array<IOperateData>,
-    default: null
+  operateColumn: {
+    type: Boolean,
+    default: false
   },
   operateWidth: {
     type: String,
