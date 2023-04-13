@@ -51,7 +51,7 @@ const handleQuery = () => {
 </script>
 
 <template>
-  <div class="nx-tab">
+  <div class="nx-tab" :class="{'set-border': true}">
     <div class="btn-list">
       <template v-for="(item, index) in props.btnList" :key="index">
         <el-button v-show="item.show" :size="item.size || 'small'" :disabled="item.disabled" :type="item.type || 'primary'" v-bind="item.options" @click="item.cb()">{{ item.name }}</el-button>
@@ -87,8 +87,14 @@ const handleQuery = () => {
       <slot name="other"/>
     </div>
     <div class="search-btn" :style="{'margin-left': `calc(${data.page['search_left_width'] || '130px'}`}">
-      <el-button class="btn" type="primary" size="mini" plain @click="handleClear">清空</el-button>
-      <el-button class="btn" type="primary" size="mini" @click="handleQuery">查询</el-button>
+      <div class="left">
+        <slot name="search_left"/>
+        <el-button class="btn" type="primary" size="mini" plain @click="handleClear">清空</el-button>
+        <el-button class="btn" type="primary" size="mini" @click="handleQuery">查询</el-button>
+      </div>
+      <div class="right">
+        <slot name="search_right"/>
+      </div>
     </div>
   </div>
 </template>
@@ -128,12 +134,23 @@ const handleQuery = () => {
     }
   }
   .search-btn {
+    display: flex;
+    justify-content: space-between;
     .btn {
       width: 70px;
+    }
+    .right {
+      margin-right: 64px;
     }
   }
   .label {
     margin: 0 8px 0 24px;
   }
+}
+
+.set-border {
+  border-width: 0 1px;
+  border-style: solid;
+  border-color: #e4e7ed;
 }
 </style>
