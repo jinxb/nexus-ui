@@ -1,10 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from 'vue';
-import type { IScreenData } from '../../packages/tab/src/types';
-import type { ITableTh } from '../../packages/table/src/types';
-import tabA from '../../packages/tab/src/tab.vue';
-import NxTabs from '../../packages/tabs/src/tabs.vue';
-import NxTable from '../../packages/table/src/table.vue';
+import type { NxTableProps, IScreenData, ITableTh } from '@jinxb/nexus-ui';
 const page = reactive({
   select: '',
   inputVal1: '',
@@ -85,7 +81,6 @@ const screenData = reactive([
 const filterChange = () => {
   console.log(page, '----------------------------------')
 }
-type NxTableProps = InstanceType<typeof NxTable>["$props"];
 const table = ref(null)
 const tableData: NxTableProps = reactive({
   th: [] as ITableTh[],
@@ -157,6 +152,8 @@ const handleChange = (name) => {
 }
 const handleClick = (...args) => {
   console.log(args, '----------------');
+  let arr = table.value.tableEmit('getCheckboxRecords')
+  console.log(arr, '------');
 }
 onMounted(() => {
   getList()
@@ -166,11 +163,11 @@ onMounted(() => {
   <div class="about">
     <nx-tabs :data="tabs" @change="handleChange">
     </nx-tabs>
-    <tab-a @filterChange="filterChange" :btnList="funBtns" :screenData="screenData" v-model:page="page">
+    <nx-tab @filterChange="filterChange" :btnList="funBtns" :screenData="screenData" v-model:page="page">
       <template #search_right>
         <el-button class="btn" type="primary" size="mini" >清空</el-button>
       </template>
-    </tab-a>
+    </nx-tab>
     <div style="height: calc(100% - 140px - 40px)">
       <nx-table @scrollLoad="scrollLoad" ref="table" v-bind="tableData" @handleClick="handleClick" class="table">
         <template #operate_slot="{scope}">

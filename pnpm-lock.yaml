@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@element-plus/icons-vue': ^2.1.0
-  '@jinxb/nexus-ui': ^1.0.0
+  '@jinxb/nexus-ui': ^1.1.1
   '@rushstack/eslint-patch': ^1.2.0
   '@types/node': ^18.14.2
   '@vitejs/plugin-vue': ^4.0.0
@@ -27,7 +27,7 @@ specifiers:
 
 dependencies:
   '@element-plus/icons-vue': 2.1.0_vue@3.2.47
-  '@jinxb/nexus-ui': 1.0.0
+  '@jinxb/nexus-ui': 1.1.1
   element-plus: 1.0.2-beta.71_vue@3.2.47
   pinia: 2.0.33_7h6e7cvei2rsgyre2mq4fyhehq
   sortablejs: 1.14.0
@@ -493,8 +493,14 @@ packages:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
 
-  /@jinxb/nexus-ui/1.0.0:
-    resolution: {integrity: sha512-hEetFyqpErAPS5kq8EVMi9dCIFd2a0u27vLsRiv7L/rDXTcTcuV3bvvo/nzZqmdZ0CjK7hIx6Qa/MzMKeA5a2w==}
+  /@jinxb/nexus-ui/1.1.1:
+    resolution: {integrity: sha512-dAOwZinYFLJ/Y1+ZhxOep05abfht4uM2ORND2n4TV7aP5hlN3vjMAwR6JNpSU1cczjIN/+p//yUTSaqxkvn+CA==}
+    dependencies:
+      element-plus: 1.0.2-beta.71_vue@3.2.47
+      sortablejs: 1.14.0
+      vue: 3.2.47
+      vxe-table: 4.3.11_vue@3.2.47+xe-utils@3.5.7
+      xe-utils: 3.5.7
     dev: false
 
   /@nodelib/fs.scandir/2.1.5:
