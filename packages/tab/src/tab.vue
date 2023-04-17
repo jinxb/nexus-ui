@@ -19,6 +19,10 @@ const props = defineProps({
   page: {
     type: Object,
     default: () => {}
+  },
+  showBorder: {
+    type: Boolean,
+    default: false
   }
 })
 const emit = defineEmits<{
@@ -51,7 +55,7 @@ const handleQuery = () => {
 </script>
 
 <template>
-  <div class="nx-tab" :class="{'set-border': true}">
+  <div class="nx-tab" :class="{'set-border': showBorder}">
     <div class="btn-list">
       <template v-for="(item, index) in props.btnList" :key="index">
         <el-button v-show="item.show" :size="item.size || 'small'" :disabled="item.disabled" :type="item.type || 'primary'" v-bind="item.options" @click="item.cb()">{{ item.name }}</el-button>
