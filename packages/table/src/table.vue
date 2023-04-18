@@ -1,19 +1,5 @@
 <template>
   <div class="nx-table-x" :style="{ maxHeight: props.showSum ? 'calc(100% - 36px)' : '100%' }">
-    <TableFilter
-      v-if="props.th.length && data.showFilter && props.cacheKey"
-      ref="filter"
-      v-model:border-color="data.borderColor"
-      v-model:height-style="data.heightStyle"
-      :cache-key="props.cacheKey"
-      :th="props.th"
-      :height-control="props.heightControl"
-      :table-th="data.tableTh"
-      :dropdown-class="props.dropdownClass"
-      @fixedChange="fixedChange"
-      @checkChange="checkChange"
-      @filterSort="filterSort"
-    />
     <keep-alive>
       <InitColor
         v-model:border-color="data.borderColor"
@@ -21,8 +7,31 @@
         v-model:height-style="data.heightStyle"
       />
     </keep-alive>
+    <div :class="{'tool-bar': props.toolBar}">
+      <vxe-toolbar v-show="props.toolBar" ref="nxToolbar" print zoom import export refresh>
+        <template #buttons>
+          <vxe-button content="打印表格" @click="printEvent1"></vxe-button>
+          <vxe-button content="打印勾选行" @click="printSelectEvent1"></vxe-button>
+        </template>
+      </vxe-toolbar>
+      <TableFilter
+        v-if="props.th.length && data.showFilter && props.cacheKey"
+        ref="filter"
+        v-model:border-color="data.borderColor"
+        v-model:height-style="data.heightStyle"
+        :cache-key="props.cacheKey"
+        :th="props.th"
+        :hasToolBar="props.toolBar"
+        :height-control="props.heightControl"
+        :table-th="data.tableTh"
+        :dropdown-class="props.dropdownClass"
+        @fixedChange="fixedChange"
+        @checkChange="checkChange"
+        @filterSort="filterSort"
+      />
+    </div>
     <vxe-table
-      v-if="data.tableTh.length"
+      v-show="data.tableTh.length"
       ref="nxTable"
       border="none"
       :data="props.tr"
@@ -38,6 +47,7 @@
       :scroll-x="props.scrollX"
       :scroll-y="props.scrollY"
       :column-config="{ minWidth: 88 }"
+      :print-config="{}"
       :class="{ 'height-medium': data.heightStyle === 'small' && props.heightControl, 'height-compact': data.heightStyle === 'mini' && props.heightControl }"
       :cell-style="{ 'border-right': '1px solid', 'border-bottom': '1px solid', 'border-color': data.borderColor }"
       :header-cell-style="{ 'border-right': '1px solid', 'border-bottom': '1px solid', 'border-color': data.borderColor }"
@@ -244,7 +254,7 @@ import InitColor from './initColor.vue'
 import db from '../../db/db'
 import { reactive, computed, watch, nextTick, ref, onMounted, useAttrs, type PropType } from 'vue'
 
-import type { VxeTableInstance, VxeTablePropTypes } from 'vxe-table';
+import type { VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance } from 'vxe-table';
 import type { ITableTh } from './types';
 
 const emit = defineEmits<{
@@ -263,6 +273,10 @@ const props = defineProps({
   attributes: {
     type: Object,
     default: () => {}
+  },
+  toolBar: {
+    type: Boolean,
+    default: false
   },
   events: {
     type: Object,
@@ -406,7 +420,101 @@ watch(
     if (!props.cacheKey) data.tableTh = props.th
   }
 )
-const nxTable = ref<VxeTableInstance | null>(null)
+const nxTable = ref<VxeTableInstance>()
+const nxToolbar = ref<VxeToolbarInstance>()
+
+// 打印样式
+const printStyle = `
+            .title {
+              text-align: center;
+            }
+            .my-list-row {
+              display: inline-block;
+              width: 100%;
+            }
+            .my-list-col {
+              float: left;
+              width: 33.33%;
+              height: 28px;
+              line-height: 28px;
+            }
+            .my-top,
+            .my-bottom {
+              font-size: 12px;
+            }
+            .my-top {
+              margin-bottom: 5px;
+            }
+            .my-bottom {
+              margin-top: 30px;
+              text-align: right;
+            }
+            `
+// 打印顶部内容模板
+const topHtml = `
+            <h1 class="title">出货单据</h1>
+            <div class="my-top">
+              <div class="my-list-row">
+                <div class="my-list-col">商品名称：vxe-table</div>
+                <div class="my-list-col">发货单号：X2665847132654</div>
+                <div class="my-list-col">发货日期：2020-09-20</div>
+              </div>
+              <div class="my-list-row">
+                <div class="my-list-col">收货姓名：小徐</div>
+                <div class="my-list-col">收货地址：火星第七区18号001</div>
+                <div class="my-list-col">联系电话：10086</div>
+              </div>
+            </div>
+            `
+
+            // 打印底部内容模板
+            const bottomHtml = `
+            <div class="my-bottom">
+              <div class="my-list-row">
+                <div class="my-list-col"></div>
+                <div class="my-list-col">创建人：小徐</div>
+                <div class="my-list-col">创建日期：2020-09-20</div>
+              </div>
+            </div>
+            `
+const printEvent1 = () => {
+const $table = nxTable.value
+$table?.print({
+  sheetName: '打印出货单据',
+  style: printStyle,
+  columns: [
+    { type: 'seq' },
+    { field: 'name' },
+    { field: 'role' },
+    { field: 'address' }
+  ],
+  beforePrintMethod: ({ content }) => {
+    // 拦截打印之前，返回自定义的 html 内容
+    return topHtml + content + bottomHtml
+  }
+ })
+}
+
+ const printSelectEvent1 = () => {
+   const $table = nxTable.value
+   $table?.print({
+     sheetName: '打印勾选行',
+     style: printStyle,
+     mode: 'selected',
+     columns: [
+       { type: 'seq' },
+       { field: 'name' },
+       { field: 'role' },
+       { field: 'address' }
+     ],
+     beforePrintMethod: ({ content }) => {
+       // 拦截打印之前，返回自定义的 html 内容
+       return topHtml + content + bottomHtml
+     }
+   })
+ }
+
+
 watch(
   () => data.heightStyle,
   value => {
@@ -426,6 +534,13 @@ watch(
   }
 )
 onMounted(async() => {
+  nextTick(() => {
+  // 将表格和工具栏进行关联
+    const $table = nxTable.value
+    const $toolbar = nxToolbar.value
+    console.log($table, $toolbar);
+    $toolbar && $table?.connect($toolbar)
+  })
   data.tableTh = props.cacheKey ? await filter.value!.initDropdownData() : props.th
   data.tableTh.forEach(th => {
     switch (th.type) {
@@ -558,6 +673,14 @@ defineExpose({
   position: relative;
   flex: 1;
   height: 100%;
+  .tool-bar {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    .vxe-toolbar {
+      flex: 1;
+    }
+  }
   :deep(.vxe-table) {
     border-width: 1px;
     border-style: solid;
@@ -577,6 +700,9 @@ defineExpose({
       color: #303133 !important;
       font-weight: 400;
       font-size: 16px;
+    }
+    .vxe-export--panel>table tr td {
+      padding: 0 10px !important;
     }
     td {
       padding: 0;

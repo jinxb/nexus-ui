@@ -1,5 +1,5 @@
 <template>
-  <div class="nx-table-filter">
+  <div class="nx-table-filter" :class="{'default-style': !hasToolBar, 'has-tools': hasToolBar}">
     <el-dropdown trigger="click" :hide-on-click="false" placement="bottom-end" @visible-change="visibleChange">
       <el-button size="mini" class="filter-button">
         <i class="el-icon-s-grid" />
@@ -84,6 +84,10 @@ const props = defineProps({
   heightControl: {
     type: Boolean,
     default: true
+  },
+  hasToolBar: {
+    type: Boolean,
+    default: false
   }
 })
 const emit = defineEmits<{
@@ -191,11 +195,6 @@ defineExpose({
 @import '../css/style.scss';
 
 .nx-table-filter {
-  position: absolute;
-  right: 0;
-  top: -40px;
-  z-index: 9;
-
   .filter-button {
     padding: 7px 9px;
 
@@ -204,5 +203,19 @@ defineExpose({
       margin: 0 1px;
     }
   }
+}
+.default-style {
+  position: absolute;
+  right: 0;
+  top: -40px;
+  z-index: 9;
+}
+.has-tools {
+  width: 56px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 16px;
+  box-sizing: border-box;
 }
 </style>
