@@ -1,111 +1,59 @@
 <template>
-  <div class="nx-table-x" :style="{ maxHeight: props.showSum ? 'calc(100% - 36px)' : '100%' }">
+  <div class="nx-table-x"
+    :style="{ maxHeight: props.showSum ? (props.toolBar.toolbarShow ? 'calc(100% - 86px)' : 'calc(100% - 36px)') : props.toolBar.toolbarShow ? 'calc(100% - 50px)' : '100%' }">
     <keep-alive>
-      <InitColor
-        v-model:border-color="data.borderColor"
-        :cache-key="props.cacheKey"
-        v-model:height-style="data.heightStyle"
-      />
+      <InitColor v-model:border-color="data.borderColor" :cache-key="props.cacheKey"
+        v-model:height-style="data.heightStyle" />
     </keep-alive>
-    <div :class="{'tool-bar': props.toolBar}">
-      <vxe-toolbar v-show="props.toolBar" ref="nxToolbar" print zoom import export refresh>
+    <div :class="{ 'tool-bar': props.toolBar.toolbarShow, 'set-border': props.toolBar.borderShow }">
+      <vxe-toolbar v-show="props.toolBar.toolbarShow" ref="nxToolbar" v-bind="props.toolBar">
         <template #buttons>
-          <vxe-button content="打印表格" @click="printEvent1"></vxe-button>
-          <vxe-button content="打印勾选行" @click="printSelectEvent1"></vxe-button>
+          <slot name="toolBarBtns"></slot>
         </template>
       </vxe-toolbar>
-      <TableFilter
-        v-if="props.th.length && data.showFilter && props.cacheKey"
-        ref="filter"
-        v-model:border-color="data.borderColor"
-        v-model:height-style="data.heightStyle"
-        :cache-key="props.cacheKey"
-        :th="props.th"
-        :hasToolBar="props.toolBar"
-        :height-control="props.heightControl"
-        :table-th="data.tableTh"
-        :dropdown-class="props.dropdownClass"
-        @fixedChange="fixedChange"
-        @checkChange="checkChange"
-        @filterSort="filterSort"
-      />
+      <TableFilter v-if="props.th.length && data.showFilter && props.cacheKey" ref="filter"
+        v-model:border-color="data.borderColor" v-model:height-style="data.heightStyle" :cache-key="props.cacheKey"
+        :th="props.th" :hasToolBar="props.toolBar.toolbarShow" :height-control="props.heightControl"
+        :table-th="data.tableTh" :dropdown-class="props.dropdownClass" @fixedChange="fixedChange"
+        @checkChange="checkChange" @filterSort="filterSort" />
     </div>
-    <vxe-table
-      v-show="data.tableTh.length"
-      ref="nxTable"
-      border="none"
-      :data="props.tr"
-      resizable
-      v-bind="props.attributes"
-      auto-resize
-      :height="props.height"
-      :highlight-hover-row="props.highlightHoverRow"
-      show-header
-      show-header-overflow
-      :show-overflow="props.showOverflow"
-      :loading="false"
-      :scroll-x="props.scrollX"
-      :scroll-y="props.scrollY"
-      :column-config="{ minWidth: 88 }"
-      :print-config="{}"
+    <vxe-table v-show="data.tableTh.length" ref="nxTable" border="none" :data="props.tr" resizable
+      v-bind="props.attributes" auto-resize :height="props.height" :highlight-hover-row="props.highlightHoverRow"
+      show-header show-header-overflow :show-overflow="props.showOverflow" :loading="false" :scroll-x="props.scrollX"
+      :scroll-y="props.scrollY" :column-config="{ minWidth: 88 }" :print-config="{}"
       :class="{ 'height-medium': data.heightStyle === 'small' && props.heightControl, 'height-compact': data.heightStyle === 'mini' && props.heightControl }"
       :cell-style="{ 'border-right': '1px solid', 'border-bottom': '1px solid', 'border-color': data.borderColor }"
       :header-cell-style="{ 'border-right': '1px solid', 'border-bottom': '1px solid', 'border-color': data.borderColor }"
       :footer-cell-style="{ 'border-right': '1px solid', 'border-bottom': '1px solid', 'border-color': data.borderColor }"
-      :style="{ 'border-color': data.borderColor }"
-      v-on="props.events"
-      @scroll="scrollEvent"
-      @resizable-change="resizableChange"
-    >
+      :style="{ 'border-color': data.borderColor }" v-on="props.events" @scroll="scrollEvent"
+      @resizable-change="resizableChange">
       <template v-for="head in data.tableTh">
-        <vxe-table-colgroup
-          v-if="head.children && head.show !== false && head.visible !== false"
-          :key="head.title"
-          v-bind="head"
-        >
+        <vxe-table-colgroup v-if="head.children && head.show !== false && head.visible !== false" :key="head.title"
+          v-bind="head">
           <template>
-            <vxe-table-column
-              v-for="column in head.children"
-              :key="column.title"
-              :fixed="null"
-              v-bind="column"
-            >
+            <vxe-table-column v-for="column in head.children" :key="column.title" :fixed="null" v-bind="column">
               <template #default="scope">
-                <slot
-                  :name="column.field"
-                  :scope="scope"
-                  :params="column.params"
-                >{{ scope.row[column.field] }}</slot>
+                <slot :name="column.field" :scope="scope" :params="column.params">{{ scope.row[column.field] }}</slot>
               </template>
             </vxe-table-column>
           </template>
         </vxe-table-colgroup>
         <template v-else>
-          <vxe-table-column
-            v-if="head.show !== false && head.visible !== false"
-            :key="head.title || 'selection'"
-            v-bind="head"
-          >
-              <template v-if="head.type !== 'seq' && head.type !== 'checkbox'" #header="scope">
+          <vxe-table-column v-if="head.show !== false && head.visible !== false" :key="head.title || 'selection'"
+            v-bind="head">
+            <template v-if="head.type !== 'seq' && head.type !== 'checkbox'" #header="scope">
               <template v-if="head.type === 'date'">
                 <el-popover placement="bottom-start" :width="260" popper-class="popper-filter" trigger="hover">
-                  <el-date-picker
-                    v-model="head.value"
-                    type="daterange"
-                    unlink-panels
-                    range-separator="至"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期"
-                    value-format="YYYY-MM-DD"
-                    style="width: 260px"
-                    :picker-options="pickerOptions"
-                    @change="emit('filter-confirm', head.field, head.value)"
-                  />
+                  <el-date-picker v-model="head.value" type="daterange" unlink-panels range-separator="至"
+                    start-placeholder="开始日期" end-placeholder="结束日期" value-format="YYYY-MM-DD" style="width: 260px"
+                    :picker-options="pickerOptions" @change="emit('filter-confirm', head.field, head.value)" />
                   <template #reference>
                     <div @click.stop>
                       {{ scope.column.title }}
-                      <span v-if="!head.value" class="icon-filterh"><span class="path1"></span><span class="path2"></span></span>
-                      <span v-else class="icon-filterhActive"><span class="path1"></span><span class="path2"></span></span>
+                      <span v-if="!head.value" class="icon-filterh"><span class="path1"></span><span
+                          class="path2"></span></span>
+                      <span v-else class="icon-filterhActive"><span class="path1"></span><span
+                          class="path2"></span></span>
                     </div>
                   </template>
                 </el-popover>
@@ -113,29 +61,19 @@
               <template v-else-if="head.type === 'filter'">
                 <el-popover :width="260" placement="bottom-start" popper-class="popper-filter" trigger="hover">
                   <div class="btns">
-                    <div
-                      :class="{ 'disabled': head.options.length === head.template.length }"
-                      @click="onClickReset(head)"
-                    >重置</div>
-                    <div
-                      :class="{ 'disabled': head.template.length === 0 }"
-                      @click="onClickFilter(head)"
-                    >筛选</div>
+                    <div :class="{ 'disabled': head.options.length === head.template.length }"
+                      @click="onClickReset(head)">重置</div>
+                    <div :class="{ 'disabled': head.template.length === 0 }" @click="onClickFilter(head)">筛选</div>
                   </div>
                   <div class="options">
                     <el-scrollbar style="height: 100%">
                       <ul>
-                        <el-checkbox
-                          v-model="head.checkAll"
+                        <el-checkbox v-model="head.checkAll"
                           :indeterminate="head.template.length !== 0 && head.template.length !== head.options.length"
-                          label="全部"
-                          @change="onCheckAllChange($event, head)"
-                        />
+                          label="全部" @change="onCheckAllChange($event, head)" />
                       </ul>
-                      <el-checkbox-group
-                        v-model="head.template"
-                        @change="head.checkAll = head.template.length === head.options.length"
-                      >
+                      <el-checkbox-group v-model="head.template"
+                        @change="head.checkAll = head.template.length === head.options.length">
                         <ul v-for="option in head.options" :key="option.key">
                           <el-checkbox :label="option.key">{{ option.label }}</el-checkbox>
                           <div class="only" @click="onClickOnly(head, option)">仅筛选此项</div>
@@ -146,71 +84,46 @@
                   <template #reference>
                     <div @click.stop>
                       {{ scope.column.title }}
-                      <span v-if="head.value.length === 0" class="icon-filterh"><span class="path1"></span><span class="path2"></span></span>
-                      <span v-else class="icon-filterhActive"><span class="path1"></span><span class="path2"></span></span>
+                      <span v-if="head.value.length === 0" class="icon-filterh"><span class="path1"></span><span
+                          class="path2"></span></span>
+                      <span v-else class="icon-filterhActive"><span class="path1"></span><span
+                          class="path2"></span></span>
                     </div>
                   </template>
                 </el-popover>
               </template>
               <template v-else-if="head.type === 'search' || head.type === 'number'">
                 <el-popover :width="260" popper-class="popper-filter" placement="bottom-start" trigger="hover">
-                  <el-input
-                    v-if="!head.selectList"
-                    v-model="head.template"
-                    placeholder="请输入搜索内容"
-                    maxlength="30"
-                    clearable
-                    @change="onChangeSearch(head)"
-                  />
-                  <el-autocomplete
-                    v-else
-                    v-model="head.template"
-                    placeholder="请输入搜索内容"
-                    :fetch-suggestions="((queryString, cb) => {
-                      querySearch(queryString, cb, head)
-                    })"
-                    clearable
-                    :name="head.field"
-                    :popper-append-to-body="false"
-                    @change="onChangeSearch(head)"
-                    @select="onChangeSearch(head)"
-                    @clear="onChangeSearch(head)"
-                  />
-                  <template #reference >
+                  <el-input v-if="!head.selectList" v-model="head.template" placeholder="请输入搜索内容" maxlength="30" clearable
+                    @change="onChangeSearch(head)" />
+                  <el-autocomplete v-else v-model="head.template" placeholder="请输入搜索内容" :fetch-suggestions="((queryString, cb) => {
+                    querySearch(queryString, cb, head)
+                  })" clearable :name="head.field" :popper-append-to-body="false" @change="onChangeSearch(head)"
+                    @select="onChangeSearch(head)" @clear="onChangeSearch(head)" />
+                  <template #reference>
                     <div @click.stop>
                       {{ scope.column.title }}
-                      <span v-if="!head.value" class="icon-filterh"><span class="path1"></span><span class="path2"></span></span>
-                      <span v-else class="icon-filterhActive"><span class="path1"></span><span class="path2"></span></span>
+                      <span v-if="!head.value" class="icon-filterh"><span class="path1"></span><span
+                          class="path2"></span></span>
+                      <span v-else class="icon-filterhActive"><span class="path1"></span><span
+                          class="path2"></span></span>
                     </div>
                   </template>
                 </el-popover>
               </template>
               <template v-else>
-                <slot
-                  :name="head.field + '_header'"
-                  :scope="scope"
-                  :params="head.params"
-                >{{ scope.column.title }}</slot>
+                <slot :name="head.field + '_header'" :scope="scope" :params="head.params">{{ scope.column.title }}</slot>
               </template>
             </template>
             <template v-if="head.type !== 'seq' && head.type !== 'checkbox'" #default="scope">
-              <slot
-                :name="head.slots ? head.slots : head.field"
-                :scope="scope"
-                :params="head.params"
-              >{{ scope.row[head.field] }}</slot>
+              <slot :name="head.slots ? head.slots : head.field" :scope="scope" :params="head.params">{{
+                scope.row[head.field] }}</slot>
             </template>
           </vxe-table-column>
         </template>
       </template>
-      <vxe-table-column
-        v-if="props.operateColumn"
-        key="operate"
-        title="操作"
-        :fixed="props.operateFixed"
-        :width="props.operateWidth ? props.operateWidth : '60'"
-        align="center"
-      >
+      <vxe-table-column v-if="props.operateColumn" key="operate" title="操作" :fixed="props.operateFixed"
+        :width="props.operateWidth ? props.operateWidth : '60'" align="center">
         <template #default="scope">
           <div>
             <slot name="operate_slot" :scope="scope">
@@ -221,25 +134,14 @@
       <template #empty>{{ props.loading ? '数据加载中' : '暂无数据' }}</template>
     </vxe-table>
     <div v-if="showSum" class="table-sum">已加载{{ props.tr.length }}条，共计{{ props.total }}条</div>
-    <div
-      v-show="props.loading"
-      class="scroll-loading"
-      :style="{ bottom: props.showSum ? '54px' : '18px' }"
-    >
+    <div v-show="props.loading" class="scroll-loading" :style="{ bottom: props.showSum ? '54px' : '18px' }">
       <span>
         <i class="el-icon-loading" />正在加载中
       </span>
     </div>
-    <el-pagination
-      v-if="pageExist"
-      :current-page="currentPage"
-      :page-sizes="[30, 40, 50, 100]"
-      :page-size="props.page.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="props.total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
+    <el-pagination v-if="pageExist" :current-page="currentPage" :page-sizes="[30, 40, 50, 100]"
+      :page-size="props.page.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="props.total"
+      @size-change="handleSizeChange" @current-change="handleCurrentChange" />
   </div>
 </template>
 <script lang="ts">
@@ -258,7 +160,7 @@ import type { VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance } from 'vx
 import type { ITableTh } from './types';
 
 const emit = defineEmits<{
-  (e:string, value?:any, params?: any):void
+  (e: string, value?: any, params?: any): void
 }>()
 const attrs = useAttrs()
 const props = defineProps({
@@ -272,15 +174,18 @@ const props = defineProps({
   },
   attributes: {
     type: Object,
-    default: () => {}
+    default: () => { }
   },
   toolBar: {
-    type: Boolean,
-    default: false
+    type: Object,
+    default: () => ({
+      toolbarShow: false,
+      borderShow: true
+    })
   },
   events: {
     type: Object,
-    default: () => {}
+    default: () => { }
   },
   operateColumn: {
     type: Boolean,
@@ -328,8 +233,8 @@ const props = defineProps({
   },
   showOverflow: {
     type: (null as unknown) as PropType<
-        VxeTablePropTypes.ShowOverflow | undefined
-      >,
+      VxeTablePropTypes.ShowOverflow | undefined
+    >,
     default: 'tooltip'
   },
   heightControl: {
@@ -408,7 +313,7 @@ watch(
     data.tableTh = []
     setTimeout(() => {
       data.showFilter = true
-      nextTick(async() => {
+      nextTick(async () => {
         data.tableTh = await filter.value!.initDropdownData()
       })
     }, 50)
@@ -467,8 +372,8 @@ const topHtml = `
             </div>
             `
 
-            // 打印底部内容模板
-            const bottomHtml = `
+// 打印底部内容模板
+const bottomHtml = `
             <div class="my-bottom">
               <div class="my-list-row">
                 <div class="my-list-col"></div>
@@ -478,41 +383,41 @@ const topHtml = `
             </div>
             `
 const printEvent1 = () => {
-const $table = nxTable.value
-$table?.print({
-  sheetName: '打印出货单据',
-  style: printStyle,
-  columns: [
-    { type: 'seq' },
-    { field: 'name' },
-    { field: 'role' },
-    { field: 'address' }
-  ],
-  beforePrintMethod: ({ content }) => {
-    // 拦截打印之前，返回自定义的 html 内容
-    return topHtml + content + bottomHtml
-  }
- })
+  const $table = nxTable.value
+  $table?.print({
+    sheetName: '打印出货单据',
+    style: printStyle,
+    columns: [
+      { type: 'seq' },
+      { field: 'name' },
+      { field: 'role' },
+      { field: 'address' }
+    ],
+    beforePrintMethod: ({ content }) => {
+      // 拦截打印之前，返回自定义的 html 内容
+      return topHtml + content + bottomHtml
+    }
+  })
 }
 
- const printSelectEvent1 = () => {
-   const $table = nxTable.value
-   $table?.print({
-     sheetName: '打印勾选行',
-     style: printStyle,
-     mode: 'selected',
-     columns: [
-       { type: 'seq' },
-       { field: 'name' },
-       { field: 'role' },
-       { field: 'address' }
-     ],
-     beforePrintMethod: ({ content }) => {
-       // 拦截打印之前，返回自定义的 html 内容
-       return topHtml + content + bottomHtml
-     }
-   })
- }
+const printSelectEvent1 = () => {
+  const $table = nxTable.value
+  $table?.print({
+    sheetName: '打印勾选行',
+    style: printStyle,
+    mode: 'selected',
+    columns: [
+      { type: 'seq' },
+      { field: 'name' },
+      { field: 'role' },
+      { field: 'address' }
+    ],
+    beforePrintMethod: ({ content }) => {
+      // 拦截打印之前，返回自定义的 html 内容
+      return topHtml + content + bottomHtml
+    }
+  })
+}
 
 
 watch(
@@ -533,9 +438,9 @@ watch(
     db.set('nx_border-color', value)
   }
 )
-onMounted(async() => {
+onMounted(async () => {
   nextTick(() => {
-  // 将表格和工具栏进行关联
+    // 将表格和工具栏进行关联
     const $table = nxTable.value
     const $toolbar = nxToolbar.value
     console.log($table, $toolbar);
@@ -673,73 +578,92 @@ defineExpose({
   position: relative;
   flex: 1;
   height: 100%;
+
   .tool-bar {
     position: relative;
     display: flex;
     justify-content: space-between;
+
     .vxe-toolbar {
       flex: 1;
     }
   }
+
   :deep(.vxe-table) {
     border-width: 1px;
     border-style: solid;
+
     .vxe-checkbox--icon {
       left: 0.1em;
     }
+
     .vxe-table--header {
       border-bottom-width: 1px;
       border-style: solid;
       border-color: #e6e8ea;
       margin-bottom: -1px;
     }
+
     .vxe-table--header-wrapper {
       overflow-y: hidden;
     }
+
     .vxe-cell--title {
       color: #303133 !important;
       font-weight: 400;
       font-size: 16px;
     }
+
     .vxe-export--panel>table tr td {
       padding: 0 10px !important;
     }
+
     td {
       padding: 0;
       height: 48px;
     }
+
     &.height-medium {
       td {
         height: 36px;
       }
     }
+
     &.height-compact {
       td {
         height: 28px;
       }
     }
+
     .row--hover {
       background: #d1e9ff;
     }
-    .vxe-body--column.col--ellipsis > .vxe-cell {
+
+    .vxe-body--column.col--ellipsis>.vxe-cell {
       max-height: 999px;
     }
+
     .vxe-table--header-wrapper {
       background: #f6f7fa;
     }
+
     .vxe-table--fixed-left-wrapper {
       border-right: none;
     }
+
     .vxe-table--border-line {
       border: none !important;
     }
+
     .vxe-header--column .vxe-resizable.is--line:before {
       width: 0;
     }
+
     .vxe-cell--sort {
       width: 1em;
     }
   }
+
   .table-sum {
     line-height: 36px;
     display: flex;
@@ -748,6 +672,7 @@ defineExpose({
     font-size: 14px;
     text-align: left;
   }
+
   .scroll-loading {
     display: flex;
     align-items: center;
@@ -761,19 +686,28 @@ defineExpose({
     background: rgba(0, 0, 0, 0.6);
     left: 50%;
     transform: translateX(-50%);
+
     i {
       color: #ffffff;
       font-size: 16px;
       margin-right: 9px;
     }
   }
+
+  .set-border {
+    border-width: 0 1px;
+    border-style: solid;
+    border-color: #e4e7ed;
+  }
 }
 
 .popper-filter {
   padding: 24px 16px;
+
   .btns {
     display: flex;
     justify-content: flex-end;
+
     div {
       width: 58px;
       text-align: center;
@@ -782,30 +716,36 @@ defineExpose({
       margin-left: 8px;
       cursor: pointer;
     }
+
     div:first-child {
       border: 1px solid #dcdfe6;
       color: #909399;
     }
+
     div:last-child {
       border: 1px solid #1890ff;
       color: #1890ff;
     }
+
     .disabled {
       opacity: 0.4;
     }
   }
+
   .options {
     width: 260px;
     border: 1px solid #dcdfe6;
     border-radius: 4px;
     margin-top: 8px;
     height: 260px;
+
     ul {
       display: flex;
       padding-left: 7px;
       align-items: center;
       line-height: 30px;
       justify-content: space-between;
+
       .el-checkbox {
         width: calc(100% - 10px);
 
@@ -831,11 +771,14 @@ defineExpose({
         flex-shrink: 0;
       }
     }
+
     ul:hover {
       background-color: #f6f7fa;
+
       .only {
         display: block;
       }
+
       .el-checkbox {
         max-width: calc(100% - 90px);
       }
