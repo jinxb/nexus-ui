@@ -15,8 +15,8 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'packages/index.ts'),
       name: 'Nxui',
-      formats: ['es'],
-      fileName: () => `nxui.min.js`
+      formats: ['es', 'umd', 'cjs', 'iife'],
+      fileName: (format) => `nxui.min.${format}.js`
     },
     rollupOptions: {
       external: ['vue', 'element-plus', 'vxe-table'],
