@@ -4,6 +4,7 @@ export default {
   editLinks: true,
   contributors: true,
   lastUpdated: true,
+  base: '/nexus-ui/',
   themeConfig: {
     siteTitle: 'Nexus',
     outlineTitle: '本页目录',
