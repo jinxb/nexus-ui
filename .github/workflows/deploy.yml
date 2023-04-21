@@ -9,15 +9,18 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 6.23.6 # Optional, defaults to latest
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v2
         with:
           node-version: 16
-          cache: npm
-      - run: npm install --frozen-lockfile
+          cache: pnpm
+      - run: pnpm install
 
       - name: Build
-        run: npm docs:build
+        run: pnpm run docs:build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
