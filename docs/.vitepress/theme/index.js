@@ -9,8 +9,7 @@ import 'vxe-table/lib/style.css'
 import locale from 'element-plus/lib/locale/lang/zh-cn'
 import 'element-plus/lib/theme-chalk/index.css'
 
-import pkg from '@jinxb/nexus-ui'
-const { Nxui } = pkg
+import { Nxui } from '@jinxb/nexus-ui'
 import '@jinxb/nexus-ui/style.css'
 
 export default {

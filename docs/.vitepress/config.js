@@ -3,12 +3,11 @@ export default {
   description: '.......',
   editLinks: true,
   contributors: true,
+  lastUpdated: true,
   themeConfig: {
     siteTitle: 'Nexus',
-    repo: 'vuejs/vue',
     outlineTitle: '本页目录',
     lastUpdatedText: '上次更新',
-    lastUpdated: true,
     cleanUrls: 'without-subfolders',
     algolia: {
       apiKey: 'your_api_key',
@@ -65,7 +64,7 @@ export default {
       ]
     },
     editLink: {
-      pattern: 'https://github.com/jinxb/:path',
+      pattern: 'https://github.com/jinxb/nexus-ui//tree/main/docs/:path',
       text: '在 GitHub 上编辑此页'
     },
     footer: {

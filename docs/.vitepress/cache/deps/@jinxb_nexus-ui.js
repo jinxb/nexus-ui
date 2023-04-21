@@ -37,7 +37,7 @@ import {
 } from "./chunk-5RHOTUZN.js";
 import "./chunk-4EOJPDL2.js";
 
-// node_modules/.pnpm/@jinxb+nexus-ui@1.2.0/node_modules/@jinxb/nexus-ui/nxui.min.js
+// node_modules/.pnpm/@jinxb+nexus-ui@1.2.2/node_modules/@jinxb/nexus-ui/nxui.min.es.js
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => {
@@ -3676,7 +3676,7 @@ export {
 };
 /*! Bundled license information:
 
-@jinxb/nexus-ui/nxui.min.js:
+@jinxb/nexus-ui/nxui.min.es.js:
   (**!
    * Sortable 1.14.0
    * @author	RubaXa   <trash@rubaxa.org>
