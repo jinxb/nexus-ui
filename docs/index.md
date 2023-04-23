@@ -1,11 +1,12 @@
 ---
 layout: home
-prev: "Get Started | Markdown"
+prev: 'Get Started | Markdown'
 hero:
-  name: Nexus
+  name: 'Nexus'
   text: 一个Vue3组件库
   tagline: 应用于业务中台开发
   image:
+    src: 'logo_test.png'
     alt: Nexus
     radius: true
   actions:

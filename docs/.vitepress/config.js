@@ -6,6 +6,7 @@ export default {
   lastUpdated: true,
   base: '/nexus-ui/',
   themeConfig: {
+    logo: "logo_mini.png",
     siteTitle: 'Nexus',
     outlineTitle: '本页目录',
     lastUpdatedText: '上次更新',
