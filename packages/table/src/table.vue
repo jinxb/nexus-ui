@@ -20,20 +20,32 @@
     <vxe-table v-show="data.tableTh.length" ref="nxTable" border="none" :data="props.tr" resizable
       v-bind="props.attributes" auto-resize :height="props.height" :highlight-hover-row="props.highlightHoverRow"
       show-header show-header-overflow :show-overflow="props.showOverflow" :loading="false" :scroll-x="props.scrollX"
-      :scroll-y="props.scrollY" :column-config="{ minWidth: 88 }" :print-config="{}"
-      :class="{ 'height-medium': data.heightStyle === 'small' && props.heightControl, 'height-compact': data.heightStyle === 'mini' && props.heightControl }"
-      :cell-style="{ 'border-right': '1px solid', 'border-bottom': '1px solid', 'border-color': data.borderColor }"
-      :header-cell-style="{ 'border-right': '1px solid', 'border-bottom': '1px solid', 'border-color': data.borderColor }"
-      :footer-cell-style="{ 'border-right': '1px solid', 'border-bottom': '1px solid', 'border-color': data.borderColor }"
-      :style="{ 'border-color': data.borderColor }" v-on="props.events" @scroll="scrollEvent"
-      @resizable-change="resizableChange">
+      :scroll-y="props.scrollY" :column-config="{ minWidth: 88 }" :print-config="{}" :class="{
+          'height-medium': data.heightStyle === 'small' && props.heightControl,
+          'height-compact': data.heightStyle === 'mini' && props.heightControl
+        }" :cell-style="{
+      'border-right': '1px solid',
+      'border-bottom': '1px solid',
+      'border-color': data.borderColor
+    }" :header-cell-style="{
+      'border-right': '1px solid',
+      'border-bottom': '1px solid',
+      'border-color': data.borderColor
+    }" :footer-cell-style="{
+      'border-right': '1px solid',
+      'border-bottom': '1px solid',
+      'border-color': data.borderColor
+    }" :style="{ 'border-color': data.borderColor }" v-on="props.events" :toolbar="{ refresh: true }"
+      @refresh-change="handleRefreshChange" @scroll="scrollEvent" @resizable-change="resizableChange">
       <template v-for="head in data.tableTh">
         <vxe-table-colgroup v-if="head.children && head.show !== false && head.visible !== false" :key="head.title"
           v-bind="head">
           <template>
             <vxe-table-column v-for="column in head.children" :key="column.title" :fixed="null" v-bind="column">
               <template #default="scope">
-                <slot :name="column.field" :scope="scope" :params="column.params">{{ scope.row[column.field] }}</slot>
+                <slot :name="column.field" :scope="scope" :params="column.params">{{
+                  scope.row[column.field]
+                }}</slot>
               </template>
             </vxe-table-column>
           </template>
@@ -61,16 +73,19 @@
               <template v-else-if="head.type === 'filter'">
                 <el-popover :width="260" placement="bottom-start" popper-class="popper-filter" trigger="hover">
                   <div class="btns">
-                    <div :class="{ 'disabled': head.options.length === head.template.length }"
-                      @click="onClickReset(head)">重置</div>
-                    <div :class="{ 'disabled': head.template.length === 0 }" @click="onClickFilter(head)">筛选</div>
+                    <div :class="{ disabled: head.options.length === head.template.length }" @click="onClickReset(head)">
+                      重置
+                    </div>
+                    <div :class="{ disabled: head.template.length === 0 }" @click="onClickFilter(head)">
+                      筛选
+                    </div>
                   </div>
                   <div class="options">
                     <el-scrollbar style="height: 100%">
                       <ul>
-                        <el-checkbox v-model="head.checkAll"
-                          :indeterminate="head.template.length !== 0 && head.template.length !== head.options.length"
-                          label="全部" @change="onCheckAllChange($event, head)" />
+                        <el-checkbox v-model="head.checkAll" :indeterminate="head.template.length !== 0 &&
+                          head.template.length !== head.options.length
+                          " label="全部" @change="onCheckAllChange($event, head)" />
                       </ul>
                       <el-checkbox-group v-model="head.template"
                         @change="head.checkAll = head.template.length === head.options.length">
@@ -96,9 +111,10 @@
                 <el-popover :width="260" popper-class="popper-filter" placement="bottom-start" trigger="hover">
                   <el-input v-if="!head.selectList" v-model="head.template" placeholder="请输入搜索内容" maxlength="30" clearable
                     @change="onChangeSearch(head)" />
-                  <el-autocomplete v-else v-model="head.template" placeholder="请输入搜索内容" :fetch-suggestions="((queryString, cb) => {
-                    querySearch(queryString, cb, head)
-                  })" clearable :name="head.field" :popper-append-to-body="false" @change="onChangeSearch(head)"
+                  <el-autocomplete v-else v-model="head.template" placeholder="请输入搜索内容" :fetch-suggestions="(queryString, cb) => {
+                      querySearch(queryString, cb, head)
+                    }
+                    " clearable :name="head.field" :popper-append-to-body="false" @change="onChangeSearch(head)"
                     @select="onChangeSearch(head)" @clear="onChangeSearch(head)" />
                   <template #reference>
                     <div @click.stop>
@@ -112,7 +128,9 @@
                 </el-popover>
               </template>
               <template v-else>
-                <slot :name="head.field + '_header'" :scope="scope" :params="head.params">{{ scope.column.title }}</slot>
+                <slot :name="head.field + '_header'" :scope="scope" :params="head.params">{{
+                  scope.column.title
+                }}</slot>
               </template>
             </template>
             <template v-if="head.type !== 'seq' && head.type !== 'checkbox'" #default="scope">
@@ -126,18 +144,17 @@
         :width="props.operateWidth ? props.operateWidth : '60'" align="center">
         <template #default="scope">
           <div>
-            <slot name="operate_slot" :scope="scope">
-            </slot>
+            <slot name="operate_slot" :scope="scope"> </slot>
           </div>
         </template>
       </vxe-table-column>
       <template #empty>{{ props.loading ? '数据加载中' : '暂无数据' }}</template>
     </vxe-table>
-    <div v-if="showSum" class="table-sum">已加载{{ props.tr.length }}条，共计{{ props.total }}条</div>
+    <div v-if="showSum" class="table-sum">
+      已加载{{ props.tr.length }}条，共计{{ props.total }}条
+    </div>
     <div v-show="props.loading" class="scroll-loading" :style="{ bottom: props.showSum ? '54px' : '18px' }">
-      <span>
-        <i class="el-icon-loading" />正在加载中
-      </span>
+      <span> <i class="el-icon-loading" />正在加载中 </span>
     </div>
     <el-pagination v-if="pageExist" :current-page="currentPage" :page-sizes="[30, 40, 50, 100]"
       :page-size="props.page.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="props.total"
@@ -156,8 +173,8 @@ import InitColor from './initColor.vue'
 import db from '../../db/db'
 import { reactive, computed, watch, nextTick, ref, onMounted, useAttrs, type PropType } from 'vue'
 
-import type { VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance } from 'vxe-table';
-import type { ITableTh } from './types';
+import type { VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance } from 'vxe-table'
+import type { ITableTh } from './types'
 
 const emit = defineEmits<{
   (e: string, value?: any, params?: any): void
@@ -232,9 +249,7 @@ const props = defineProps({
     }
   },
   showOverflow: {
-    type: (null as unknown) as PropType<
-      VxeTablePropTypes.ShowOverflow | undefined
-    >,
+    type: null as unknown as PropType<VxeTablePropTypes.ShowOverflow | undefined>,
     default: 'tooltip'
   },
   heightControl: {
@@ -277,35 +292,41 @@ const data = reactive({
 const filter = ref<InstanceType<typeof TableFilter> | null>(null)
 const pickerOptions = computed(() => {
   return {
-    shortcuts: [{
-      text: '今天',
-      onClick(picker) {
-        const end = new Date()
-        const start = new Date()
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 0)
-        picker.emit('pick', [start, end])
+    shortcuts: [
+      {
+        text: '今天',
+        onClick(picker) {
+          const end = new Date()
+          const start = new Date()
+          start.setTime(start.getTime() - 3600 * 1000 * 24 * 0)
+          picker.emit('pick', [start, end])
+        }
+      },
+      {
+        text: '最近一周',
+        onClick(picker) {
+          const end = new Date()
+          const start = new Date()
+          start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+          picker.emit('pick', [start, end])
+        }
+      },
+      {
+        text: '最近一个月',
+        onClick(picker) {
+          const end = new Date()
+          const start = new Date()
+          start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+          picker.emit('pick', [start, end])
+        }
       }
-    }, {
-      text: '最近一周',
-      onClick(picker) {
-        const end = new Date()
-        const start = new Date()
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-        picker.emit('pick', [start, end])
-      }
-    }, {
-      text: '最近一个月',
-      onClick(picker) {
-        const end = new Date()
-        const start = new Date()
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-        picker.emit('pick', [start, end])
-      }
-    }]
+    ]
   }
 })
 const currentPage = computed(() => props.page.pageNum + 1)
-const pageExist = computed(() => props.page && props.page.pageNum >= 0 && props.page.pageSize && props.showPage)
+const pageExist = computed(
+  () => props.page && props.page.pageNum >= 0 && props.page.pageSize && props.showPage
+)
 watch(
   () => props.cacheKey,
   () => {
@@ -387,12 +408,7 @@ const printEvent1 = () => {
   $table?.print({
     sheetName: '打印出货单据',
     style: printStyle,
-    columns: [
-      { type: 'seq' },
-      { field: 'name' },
-      { field: 'role' },
-      { field: 'address' }
-    ],
+    columns: [{ type: 'seq' }, { field: 'name' }, { field: 'role' }, { field: 'address' }],
     beforePrintMethod: ({ content }) => {
       // 拦截打印之前，返回自定义的 html 内容
       return topHtml + content + bottomHtml
@@ -406,12 +422,7 @@ const printSelectEvent1 = () => {
     sheetName: '打印勾选行',
     style: printStyle,
     mode: 'selected',
-    columns: [
-      { type: 'seq' },
-      { field: 'name' },
-      { field: 'role' },
-      { field: 'address' }
-    ],
+    columns: [{ type: 'seq' }, { field: 'name' }, { field: 'role' }, { field: 'address' }],
     beforePrintMethod: ({ content }) => {
       // 拦截打印之前，返回自定义的 html 内容
       return topHtml + content + bottomHtml
@@ -419,10 +430,12 @@ const printSelectEvent1 = () => {
   })
 }
 
-
+const handleRefreshChange = (status) => {
+  console.log('aaaaaaaaaaaaaa', status)
+}
 watch(
   () => data.heightStyle,
-  value => {
+  (value) => {
     if (nxTable.value) {
       nxTable.value.recalculate()
       nxTable.value.refreshScroll()
@@ -433,7 +446,7 @@ watch(
 )
 watch(
   () => data.borderColor,
-  value => {
+  (value) => {
     if (!value) data.borderColor = '#E6E8EA'
     db.set('nx_border-color', value)
   }
@@ -443,18 +456,20 @@ onMounted(async () => {
     // 将表格和工具栏进行关联
     const $table = nxTable.value
     const $toolbar = nxToolbar.value
-    console.log($table, $toolbar);
+    console.log($table, $toolbar)
     $toolbar && $table?.connect($toolbar)
   })
   data.tableTh = props.cacheKey ? await filter.value!.initDropdownData() : props.th
-  data.tableTh.forEach(th => {
+  data.tableTh.forEach((th) => {
     switch (th.type) {
       case 'search':
       case 'number':
         th.template = ''
         break
       case 'filter':
-        th.template = th.options.map(o => { return o.key })
+        th.template = th.options.map((o) => {
+          return o.key
+        })
         th.checkAll = true
         break
     }
@@ -474,7 +489,7 @@ function handleSizeChange(val) {
   emit('pageChange')
 }
 function fixedChange(column, type) {
-  data.tableTh.forEach(item => {
+  data.tableTh.forEach((item) => {
     if (item.title === column.title) {
       if (item.fixed === type) {
         item.fixed = null
@@ -491,12 +506,12 @@ function fixedChange(column, type) {
   filter.value!.cacheDropdownData()
 }
 function resizableChange({ column }) {
-  const prop = props.th.find(item => item.title === column.title)
+  const prop = props.th.find((item) => item.title === column.title)
   prop!.resizeWidth = column.resizeWidth
   filter.value!.cacheDropdownData()
 }
 function checkChange(item) {
-  const check = data.tableTh.find(value => value.title === item.title)
+  const check = data.tableTh.find((value) => value.title === item.title)
   check!.visible = item.visible
   emit('headerChange', data.tableTh)
   filter.value!.cacheDropdownData()
@@ -513,14 +528,20 @@ function filterSort(oldIndex, newIndex) {
   filter.value!.cacheDropdownData()
 }
 function onCheckAllChange(value, head) {
-  head.template = value ? head.options.map(o => { return o.key }) : []
+  head.template = value
+    ? head.options.map((o) => {
+      return o.key
+    })
+    : []
 }
 function onClickReset(head) {
   if (head.template.length === head.options.length) {
     return
   }
   head.checkAll = true
-  head.template = head.options.map(o => { return o.key })
+  head.template = head.options.map((o) => {
+    return o.key
+  })
   head.value = []
   emit('filter-confirm', head.field, [])
 }
@@ -538,10 +559,14 @@ function onClickOnly(head, option) {
 }
 function querySearch(queryString, cb, head) {
   let list = head.selectList
-  list = head.selectList.filter(item => {
+  list = head.selectList.filter((item) => {
     return item.toLowerCase().indexOf(queryString.toLowerCase()) !== -1
   })
-  cb(list.map(item => { return { value: item } }))
+  cb(
+    list.map((item) => {
+      return { value: item }
+    })
+  )
 }
 function onChangeSearch(head) {
   let value = head.type === 'number' ? parseFloat(head.template) : head.template
@@ -555,11 +580,11 @@ function onChangeSearch(head) {
 }
 function scrollEvent({ scrollTop }) {
   if (attrs.onScrollLoad === undefined || props.loading) return
-  const el = (nxTable.value!.$el).querySelector('.vxe-table--body-wrapper')
+  const el = nxTable.value!.$el.querySelector('.vxe-table--body-wrapper')
   const scrollHeight = +el.scrollHeight
   const clientHeight = +el.clientHeight
   if (scrollHeight === clientHeight) return
-  if (scrollTop >= (scrollHeight - clientHeight - 50)) {
+  if (scrollTop >= scrollHeight - clientHeight - 50) {
     emit('scrollLoad')
   }
 }
