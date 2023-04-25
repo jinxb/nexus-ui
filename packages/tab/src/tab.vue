@@ -23,6 +23,10 @@ const props = defineProps({
   showBorder: {
     type: Boolean,
     default: false
+  },
+  ignoredFields: {
+    type: Array,
+    default: () => ['current', 'size']
   }
 })
 const emit = defineEmits<{
@@ -43,7 +47,9 @@ const onSelectChange = (value, key) => {
 
 const handleClear = () => {
   for (const key in data.page) {
-    data.page[key] = ''
+    if (!props.ignoredFields.includes(key)) {
+      data.page[key] = ''
+    }
   }
   emit('filterChange')
 }
