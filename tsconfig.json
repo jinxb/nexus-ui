@@ -7,7 +7,8 @@
       "@/*": ["examples/*"]
     },
     "lib": ["es2021", "dom"],
-    "strict": false
+    "strict": false,
+    "noImplicitAny": false
   },
 
   "references": [

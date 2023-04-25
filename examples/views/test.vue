@@ -70,7 +70,6 @@ const setTh = (tab: string) => {
 setTh(tabVal.value)
 
 
-
 function findList(size) {
   return new Promise(resolve => {
     setTimeout(() => {
@@ -93,6 +92,10 @@ function findList(size) {
   })
 }
 
+const handleClick = (scope) => {
+  console.log('111111', scope);
+}
+
 onMounted(() => {
   getList()
 })
@@ -108,7 +111,7 @@ onMounted(() => {
         <template #toolBarBtns>
           <el-button size="mini" @click="() => { }">功能1</el-button>
         </template>
-        <template #operate_slot="{ scope }">
+        <template #operate_slot="scope">
           <div>
             <el-button plain type="danger" size="mini" @click="handleClick(scope)">按钮</el-button>
           </div>
