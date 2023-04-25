@@ -62,7 +62,15 @@ export default {
         },
       ],
       "/tools/": [
-        
+        {
+          text: "Hooks",
+          items: [
+            {
+              text: "useTableData",
+              link: "/tools/useTableData/",
+            }
+          ],
+        },
       ]
     },
     editLink: {
