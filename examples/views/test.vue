@@ -2,111 +2,22 @@
 import { onMounted, reactive, ref } from 'vue';
 import type { NxTableProps, IScreenData, ITableTh, NxTableInstance }
   from '@jinxb/nexus-ui';
-import { useTableData } from '../utils/';
+import { useTableData } from '@jinxb/nexus-ui';
 
-/**
- * tabs 页签部分
- * @tabs 配置项
- * @handleTabChange 页签切换触发的方法
- */
-const tabs = [
-  {
-    name: '标签a',
-    label: '标签a'
-  },
-  {
-    name: '标签b',
-    label: '标签b'
-  }
-]
-const tabVal = ref(tabs[0].name)
+import { tabs, page, screenData, funBtns } from './config';
+
+
+const tabVal = ref(tabs[0].name) // 当前页签
+// 切换页签触发的事件
 const handleTabChange = (name) => {
   tabVal.value = name
   setTh(name)
   getList(true)
 }
 
-
-
-/**
- * 表单配置
- * @page 表单对应接收属性
- * @screenData 表单配置项
- * @funBtns 顶部按钮 - -定制化可有可无
- * @filterChange 表单change事件
- */
-const page = reactive({
-  current: 1,
-  size: 50,
-  select: '',
-  inputVal1: '',
-  inputVa22: '',
-  inputVa33: '',
-  inputVa44: ''
-})
-const screenData = reactive([
-  {
-    label: '渠道商品编码',
-    type: 'select',
-    key: 'select',
-    placeholder: '111',
-    options: [
-      {
-        label: '1',
-        value: '1'
-      },
-      {
-        label: '2',
-        value: '2'
-      }
-    ]
-  },
-  {
-    label: '商品编码',
-    type: 'date',
-    key: 'date'
-  },
-  {
-    label: '仓库名称',
-    type: 'input',
-    key: 'inputVal1'
-  },
-  {
-    label: '仓库名称2',
-    type: 'input',
-    key: 'inputVa22'
-  },
-  {
-    label: '仓库名称3',
-    type: 'input',
-    key: 'inputVa33'
-  },
-  {
-    label: '仓库名称4',
-    type: 'input',
-    key: 'inputVa44'
-  }
-]) as IScreenData[]
-
-const funBtns = reactive([
-  {
-    name: '按钮1按钮1按钮1',
-    show: true,
-    cb: () => () => {
-      console.log('按钮1按钮1按钮1');
-    }
-  },
-  {
-    name: '按钮2',
-    show: false,
-    cb: () => () => {
-      console.log('按钮2');
-    }
-  }
-])
-
+// 修改表单触发的事件
 const filterChange = () => {
-  console.log(page, '----------------------------------')
+  console.log('修改表单触发的事件')
 }
 
 
@@ -146,18 +57,17 @@ const { getListData, scrollLoad } = useTableData(table, tableData, page, ({ size
 getList = (flag) => { getListData(flag) }
 
 const setTh = (tab: string) => {
-  let flag = tabs[0].name
   const th = [
     { field: 'checkbox', width: 50, type: 'checkbox' },
     { field: 'id', title: '序号', handleClickShow: false },
-    { field: 'name', title: '序号2', show: tab === flag },
+    { field: 'name', title: '序号2', show: tab === tabVal.value },
     { field: 'role', title: '序号3' },
     { field: 'age', title: '序号4' },
   ] as ITableTh[]
   tableData.th = th
   tableData.cacheKey = 'Nx-table' + tab
 }
-setTh(tabs[0].name)
+setTh(tabVal.value)
 
 
 
@@ -183,12 +93,6 @@ function findList(size) {
   })
 }
 
-const handleClick = (...args) => {
-  console.log(args, '----------------');
-  let arr = table.value.tableEmit('getCheckboxRecords')
-  console.log(arr, '------');
-}
-
 onMounted(() => {
   getList()
 })
@@ -202,10 +106,7 @@ onMounted(() => {
     <div style="height: calc(100% - 210px)">
       <nx-table @scrollLoad="scrollLoad" ref="table" v-bind="tableData" @handleClick="handleClick" class="table">
         <template #toolBarBtns>
-          <el-button size="mini" @click="handleClick()">功能1</el-button>
-          <el-button size="mini" @click="handleClick()">功能2</el-button>
-          <el-button size="mini" @click="handleClick()">功能3</el-button>
-          <el-button size="mini" @click="handleClick()">功能4</el-button>
+          <el-button size="mini" @click="() => { }">功能1</el-button>
         </template>
         <template #operate_slot="{ scope }">
           <div>
