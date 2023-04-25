@@ -60,7 +60,7 @@ function useData(data: Ref<string>) {
  * @param params 参数对象
  * @returns 返回getListData和scrollLoad两个异步函数
  */
-export function useTableData(
+export default function useTableData(
   table: NxTableInstance,
   tableData: TableData,
   params: Params,

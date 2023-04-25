@@ -5,6 +5,8 @@ import Tab from './tab'
 import Tabs from './tabs'
 import Table from './table'
 
+import { useTableData } from './utils'
+
 export type NxTableInstance = InstanceType<typeof Table>
 export type NxTabInstance = InstanceType<typeof Tab>
 export type NxTabsInstance = InstanceType<typeof Tabs>
@@ -29,4 +31,4 @@ if (typeof window !== 'undefined') {
 
 const Nxui = { install }
 
-export { Nxui, db }
+export { Nxui, db, useTableData }
