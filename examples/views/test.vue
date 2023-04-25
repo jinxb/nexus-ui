@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from 'vue';
-import type { NxTableProps, IScreenData, ITableTh } from '@jinxb/nexus-ui';
+import type { NxTableProps, IScreenData, ITableTh, NxTableInstance }
+  from '@jinxb/nexus-ui';
+import { useTableData } from '../utils/';
 
 /**
  * tabs 页签部分
@@ -17,8 +19,11 @@ const tabs = [
     label: '标签b'
   }
 ]
+const tabVal = ref(tabs[0].name)
 const handleTabChange = (name) => {
+  tabVal.value = name
   setTh(name)
+  getList(true)
 }
 
 
@@ -31,6 +36,8 @@ const handleTabChange = (name) => {
  * @filterChange 表单change事件
  */
 const page = reactive({
+  current: 1,
+  size: 50,
   select: '',
   inputVal1: '',
   inputVa22: '',
@@ -111,8 +118,8 @@ const filterChange = () => {
  * @getList 初始化表格行数据
  * @scrollLoad 下拉加载
  */
-const table = ref(null)
-let getList: (flag?: boolean) => {}
+const table = ref<NxTableInstance>()
+let getList: (flag?: boolean) => void
 // 表格配置
 const tableData: NxTableProps = reactive({
   th: [] as ITableTh[],
@@ -127,16 +134,16 @@ const tableData: NxTableProps = reactive({
     refresh: { query: (...status) => { getList(true); console.log(status) } }
   },
   // showPage: true,
-  page: {
-    pageNum: 0,
-    pageSize: 50
-  },
   operateColumn: true,
   operateFixed: true,
   operateWidth: '120',
   total: 999,
   loading: false
 })
+
+const { getListData, scrollLoad } = useTableData(table, tableData, page, ({ size }) => findList(size), tabVal)
+
+getList = (flag) => { getListData(flag) }
 
 const setTh = (tab: string) => {
   let flag = tabs[0].name
@@ -152,29 +159,7 @@ const setTh = (tab: string) => {
 }
 setTh(tabs[0].name)
 
-getList = async (flag = false) => {
-  if (flag) {
-    tableData.tr = []
-    tableData.total = 0
-  }
-  tableData.loading = true
-  // 参数，函数
-  const data = await findList(30) as []
-  tableData.tr = [
-    ...tableData.tr,
-    ...data
-  ]
-  tableData.total = tableData.tr.length
 
-  tableData.loading = false
-  table.value.tableEmit('updateData')
-}
-
-const scrollLoad = (params) => {
-  console.log(params, '----------')
-  if (tableData.loading) return
-  getList()
-}
 
 function findList(size) {
   return new Promise(resolve => {
@@ -190,7 +175,10 @@ function findList(size) {
           address: 'address abc' + index
         })
       }
-      resolve(list)
+      resolve({
+        total: 200,
+        records: list
+      })
     }, 250)
   })
 }
