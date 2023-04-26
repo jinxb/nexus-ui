@@ -83,18 +83,16 @@ function findList(size) {
       for (var index = 0; index < size; index++) {
         list.push({
           id: 100000 + index,
-          name: 'test' + index,
-          role: 'developer',
-          age: 10,
-          date: '2019-05-01',
-          address: 'address abc' + index
+          name: 'admin' + index,
+          role: '前端开发',
+          age: 10 + index
         })
       }
       resolve({
         total: 200,
         records: list
       })
-    }, 250)
+    }, 100)
   })
 }
 
