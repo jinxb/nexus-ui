@@ -7,7 +7,7 @@
 如何使用？
 
 <details>
-<summary>展开查看</summary>
+<summary class="show">展开查看</summary>
 
 ### config.vue
 

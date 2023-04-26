@@ -37,7 +37,7 @@ import {
 } from "./chunk-5RHOTUZN.js";
 import "./chunk-4EOJPDL2.js";
 
-// node_modules/.pnpm/@jinxb+nexus-ui@1.3.0/node_modules/@jinxb/nexus-ui/nxui.min.es.js
+// node_modules/.pnpm/@jinxb+nexus-ui@1.3.2/node_modules/@jinxb/nexus-ui/nxui.min.es.js
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => {
@@ -177,6 +177,10 @@ var _sfc_main$4 = defineComponent({
     showBorder: {
       type: Boolean,
       default: false
+    },
+    ignoredFields: {
+      type: Array,
+      default: () => ["current", "size"]
     }
   },
   setup(__props, { emit }) {
@@ -193,7 +197,9 @@ var _sfc_main$4 = defineComponent({
     };
     const handleClear = () => {
       for (const key in data.page) {
-        data.page[key] = "";
+        if (!props.ignoredFields.includes(key)) {
+          data.page[key] = "";
+        }
       }
       emit("filterChange");
     };
@@ -332,7 +338,7 @@ var _export_sfc = (sfc, props) => {
   }
   return target;
 };
-var NxTab = _export_sfc(_sfc_main$4, [["__scopeId", "data-v-acfb8084"]]);
+var NxTab = _export_sfc(_sfc_main$4, [["__scopeId", "data-v-89382dd4"]]);
 NxTab.name = "NxTab";
 NxTab.install = function(app) {
   app.component(NxTab.name, NxTab);

@@ -1,7 +1,9 @@
+### 图片实例
+
 ![通用页面](/table_cpn.png)
 
 <details>
-<summary>展开查看</summary>
+<summary class="show">展开查看</summary>
 
 ### pageName.vue
 
@@ -142,7 +144,7 @@ onMounted(() => {
 
 </details>
 
-# Table Attributes
+### Table Attributes
 
 | Prop 名称           | 类型                                        | 描述                         | 默认值                                     |
 | ------------------- | ------------------------------------------- | ---------------------------- | ------------------------------------------ |

@@ -11,6 +11,7 @@ import 'element-plus/lib/theme-chalk/index.css'
 
 import { Nxui } from '@jinxb/nexus-ui'
 import '@jinxb/nexus-ui/style.css'
+import '../../assets/common.scss';
 
 export default {
   ...DefaultTheme,

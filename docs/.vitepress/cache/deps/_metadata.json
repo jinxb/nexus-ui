@@ -1,41 +1,41 @@
 {
-  "hash": "7a8074ed",
-  "browserHash": "b67b0188",
+  "hash": "62471f04",
+  "browserHash": "179006d9",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/.pnpm/vue@3.2.47/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "19c6ca0a",
+      "fileHash": "f6619bdd",
       "needsInterop": false
     },
     "element-plus": {
       "src": "../../../../node_modules/.pnpm/element-plus@1.0.2-beta.71_vue@3.2.47/node_modules/element-plus/es/index.js",
       "file": "element-plus.js",
-      "fileHash": "10ba44ed",
+      "fileHash": "fbfc24e1",
       "needsInterop": false
     },
     "xe-utils": {
       "src": "../../../../node_modules/.pnpm/xe-utils@3.5.7/node_modules/xe-utils/index.js",
       "file": "xe-utils.js",
-      "fileHash": "a88bbf9a",
+      "fileHash": "e6d61c2b",
       "needsInterop": true
     },
     "vxe-table": {
       "src": "../../../../node_modules/.pnpm/vxe-table@4.3.11_vue@3.2.47+xe-utils@3.5.7/node_modules/vxe-table/es/index.esm.js",
       "file": "vxe-table.js",
-      "fileHash": "d5b331f6",
+      "fileHash": "f4f0e45b",
       "needsInterop": false
     },
     "element-plus/lib/locale/lang/zh-cn": {
       "src": "../../../../node_modules/.pnpm/element-plus@1.0.2-beta.71_vue@3.2.47/node_modules/element-plus/lib/locale/lang/zh-cn.js",
       "file": "element-plus_lib_locale_lang_zh-cn.js",
-      "fileHash": "659f6ade",
+      "fileHash": "b0910a09",
       "needsInterop": true
     },
     "@jinxb/nexus-ui": {
-      "src": "../../../../node_modules/.pnpm/@jinxb+nexus-ui@1.3.0/node_modules/@jinxb/nexus-ui/nxui.min.es.js",
+      "src": "../../../../node_modules/.pnpm/@jinxb+nexus-ui@1.3.2/node_modules/@jinxb/nexus-ui/nxui.min.es.js",
       "file": "@jinxb_nexus-ui.js",
-      "fileHash": "3c761442",
+      "fileHash": "6b88c148",
       "needsInterop": false
     }
   },
