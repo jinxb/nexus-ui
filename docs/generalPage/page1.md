@@ -1,50 +1,20 @@
-<style>
-    .about {
-      /* display: flex;
-      flex-direction: column; */
-      height: 100vh;
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-    }
-    .example{
-        border: 1px solid #f5f5f5;
-        border-radius: 5px;
-        padding:20px
-    }
-    .el-button {
-        margin:10px 5px
-    }
-    
-    details > summary:first-of-type {
-        font-size: 10px;
-        padding: 8px 0;
-        cursor: pointer;
-        color: #1989fa;
-    }
-</style>
-
 ## 带有页签的页面
-
-如何使用？
 
 #### 组件与 vitepress 不兼容，因此用图片替代
 
 ![通用页面](/table.png)
 
+如何使用？
+
 <details>
 <summary>展开查看</summary>
 
-```vue
-<script lang="ts" setup>
-import { onMounted, reactive, ref } from 'vue'
-import type { NxTableProps, IScreenData, ITableTh } from '@jinxb/nexus-ui'
+### config.vue
 
-/**
- * tabs 页签部分
- * @tabs 配置项
- * @handleTabChange 页签切换触发的方法
- */
+```javascript
+import { reactive } from 'vue'
+import type { IScreenData } from '@jinxb/nexus-ui'
+
 const tabs = [
   {
     name: '标签a',
@@ -55,18 +25,10 @@ const tabs = [
     label: '标签b'
   }
 ]
-const handleTabChange = (name) => {
-  setTh(name)
-}
 
-/**
- * 表单配置
- * @page 表单对应接收属性
- * @screenData 表单配置项
- * @funBtns 顶部按钮 - -定制化可有可无
- * @filterChange 表单change事件
- */
 const page = reactive({
+  current: 1,
+  size: 50,
   select: '',
   inputVal1: '',
   inputVa22: '',
@@ -134,8 +96,31 @@ const funBtns = reactive([
   }
 ])
 
+export { tabs, page, screenData, funBtns }
+
+```
+
+### pageHome.vue
+
+```vue
+<script lang="ts" setup>
+import { onMounted, reactive, ref } from 'vue'
+import type { NxTableProps, ITableTh, NxTableInstance } from '@jinxb/nexus-ui'
+import { useTableData } from '@jinxb/nexus-ui'
+
+import { tabs, page, screenData, funBtns } from './config'
+
+const tabVal = ref(tabs[0].name) // 当前页签
+// 切换页签触发的事件
+const handleTabChange = (name) => {
+  tabVal.value = name
+  setTh(name)
+  getList(true)
+}
+
+// 修改表单触发的事件
 const filterChange = () => {
-  console.log(page, '----------------------------------')
+  console.log('修改表单触发的事件')
 }
 
 /**
@@ -146,7 +131,8 @@ const filterChange = () => {
  * @getList 初始化表格行数据
  * @scrollLoad 下拉加载
  */
-const table = ref(null)
+const table = ref<NxTableInstance>()
+let getList: (flag?: boolean) => void
 // 表格配置
 const tableData: NxTableProps = reactive({
   th: [] as ITableTh[],
@@ -158,13 +144,14 @@ const tableData: NxTableProps = reactive({
     zoom: true,
     import: true,
     export: true,
-    refresh: true
+    refresh: {
+      query: (...status) => {
+        getList(true)
+        console.log(status)
+      }
+    }
   },
   // showPage: true,
-  page: {
-    pageNum: 0,
-    pageSize: 50
-  },
   operateColumn: true,
   operateFixed: true,
   operateWidth: '120',
@@ -172,36 +159,30 @@ const tableData: NxTableProps = reactive({
   loading: false
 })
 
+const { getListData, scrollLoad } = useTableData(
+  table,
+  tableData,
+  page,
+  ({ size }) => findList(size),
+  tabVal
+)
+
+getList = (flag) => {
+  getListData(flag)
+}
+
 const setTh = (tab: string) => {
-  let flag = tabs[0].name
   const th = [
     { field: 'checkbox', width: 50, type: 'checkbox' },
     { field: 'id', title: '序号', handleClickShow: false },
-    { field: 'name', title: '序号2', show: tab === flag },
+    { field: 'name', title: '序号2', show: tab === tabVal.value },
     { field: 'role', title: '序号3' },
     { field: 'age', title: '序号4' }
   ] as ITableTh[]
   tableData.th = th
   tableData.cacheKey = 'Nx-table' + tab
 }
-setTh(tabs[0].name)
-
-const getList = async () => {
-  tableData.loading = true
-  const data = (await findList(10)) as []
-  tableData.tr = [...tableData.tr, ...data]
-  tableData.total = tableData.tr.length
-  console.log(tableData.tr)
-
-  tableData.loading = false
-  table.value.tableEmit('updateData')
-}
-
-const scrollLoad = (params) => {
-  console.log(params, '----------')
-  if (tableData.loading) return
-  getList()
-}
+setTh(tabVal.value)
 
 function findList(size) {
   return new Promise((resolve) => {
@@ -217,15 +198,16 @@ function findList(size) {
           address: 'address abc' + index
         })
       }
-      resolve(list)
+      resolve({
+        total: 200,
+        records: list
+      })
     }, 250)
   })
 }
 
-const handleClick = (...args) => {
-  console.log(args, '----------------')
-  let arr = table.value.tableEmit('getCheckboxRecords')
-  console.log(arr, '------')
+const handleClick = (scope) => {
+  console.log('111111', scope)
 }
 
 onMounted(() => {
@@ -234,7 +216,7 @@ onMounted(() => {
 </script>
 <template>
   <div class="about">
-    <nx-tabs :data="tabs" @change="handleChange"> </nx-tabs>
+    <nx-tabs :data="tabs" @change="handleTabChange"> </nx-tabs>
     <nx-tab
       @filterChange="filterChange"
       :btnList="funBtns"
@@ -251,12 +233,9 @@ onMounted(() => {
         class="table"
       >
         <template #toolBarBtns>
-          <el-button size="mini" @click="handleClick()">功能1</el-button>
-          <el-button size="mini" @click="handleClick()">功能2</el-button>
-          <el-button size="mini" @click="handleClick()">功能3</el-button>
-          <el-button size="mini" @click="handleClick()">功能4</el-button>
+          <el-button size="mini" @click="() => {}">功能1</el-button>
         </template>
-        <template #operate_slot="{ scope }">
+        <template #operate_slot="scope">
           <div>
             <el-button plain type="danger" size="mini" @click="handleClick(scope)">按钮</el-button>
           </div>
@@ -265,6 +244,17 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.about {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+</style>
 ```
 
 </details>

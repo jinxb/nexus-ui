@@ -1,87 +1,148 @@
-<style>
-    .about {
-      /* display: flex;
-      flex-direction: column; */
-      height: 100vh;
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-    }
-    .example{
-        border: 1px solid #f5f5f5;
-        border-radius: 5px;
-        padding:20px
-    }
-    .el-button {
-        margin:10px 5px
-    }
-    
-    details > summary:first-of-type {
-        font-size: 10px;
-        padding: 8px 0;
-        cursor: pointer;
-        color: #1989fa;
-    }
-</style>
+![通用页面](/table_cpn.png)
 
-## 简单的使用
+<details>
+<summary>展开查看</summary>
+
+### pageName.vue
 
 ```vue
-<template>
-  <nx-table ref="xTable" v-bind="tableData"> </nx-table>
-</template>
-<script setup lang="ts">
-interface ColumnData {
-  field: string
-  title: string
-}
+<script lang="ts" setup>
+import { onMounted, reactive, ref } from 'vue'
+import type { NxTableProps, ITableTh, NxTableInstance } from '@jinxb/nexus-ui'
+import { useTableData } from '@jinxb/nexus-ui'
 
-const spanMethod = ({ row, column, rowIndex, columnIndex }) => {
-  if (row.name === '总计') {
-    if (columnIndex === 0) {
-      console.log(row)
-
-      return { rowspan: 1, colspan: 2 }
-    } else if (columnIndex === 1) {
-      return { rowspan: 0, colspan: 0 }
+/**
+ * 表格配置
+ * @table 绑定表格ref
+ * @tableData 表格配置项
+ * @setTh 初始化表头数据
+ * @getList 初始化表格行数据
+ * @scrollLoad 下拉加载
+ */
+const table = ref<NxTableInstance>()
+let getList: (flag?: boolean) => void
+// 表格配置
+const tableData: NxTableProps = reactive({
+  th: [] as ITableTh[],
+  tr: [],
+  showSum: true,
+  toolBar: {
+    toolbarShow: true,
+    print: true,
+    zoom: true,
+    import: true,
+    export: true,
+    refresh: {
+      query: (...status) => {
+        getList(true)
+        console.log(status)
+      }
     }
-  }
+  },
+  operateColumn: true,
+  operateFixed: true,
+  operateWidth: '120',
+  total: 999,
+  loading: false
+})
+const page = reactive({
+  current: 1,
+  size: 50
+})
+
+const { getListData, scrollLoad } = useTableData(table, tableData, page, ({ size }) =>
+  findList(size)
+)
+
+// 设置表头
+const setTh = () => {
+  const th = [
+    { field: 'checkbox', width: 50, type: 'checkbox' },
+    { field: 'id', title: '序号', handleClickShow: false },
+    { field: 'name', title: '序号2' },
+    { field: 'role', title: '序号3' },
+    { field: 'age', title: '序号4' }
+  ] as ITableTh[]
+  tableData.th = th
+  tableData.cacheKey = 'Nx-table'
 }
-const tableData = {
-  height: 500,
-  th: [
-    { field: 'name', title: 'Name' },
-    { field: 'age', title: 'Age' },
-    { field: 'sum', title: 'Sum' }
-  ] as ColumnData[],
-  tr: [
-    { name: 'a', age: 18, sum: 1 },
-    { name: 'b', age: 18, sum: 2 },
-    { name: 'c', age: 18, sum: 5 },
-    { name: '总计', age: 18, sum: 8 },
-    { name: 'd', age: 18, sum: 6 },
-    { name: 'e', age: 18, sum: 7 },
-    { name: 'f', age: 18, sum: 8 },
-    { name: '总计', age: 18, sum: 21 },
-    { name: 'g', age: 18, sum: 8 }
-  ],
-  attributes: {
-    spanMethod: spanMethod
-  }
+setTh()
+
+// 请求数据
+getList = (flag) => {
+  getListData(flag)
 }
+
+// 模拟请求数据
+function findList(size) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      var list = []
+      for (var index = 0; index < size; index++) {
+        list.push({
+          id: 100000 + index,
+          name: 'test' + index,
+          role: 'developer',
+          age: 10,
+          date: '2019-05-01',
+          address: 'address abc' + index
+        })
+      }
+      resolve({
+        total: 200,
+        records: list
+      })
+    }, 250)
+  })
+}
+
+const handleClick = (scope) => {
+  console.log('111111', scope)
+}
+
+onMounted(() => {
+  getList()
+})
 </script>
-<style>
-.rowGreen {
-  background-color: green;
+
+<template>
+  <div class="about">
+    <div style="height: calc(100% - 210px)">
+      <nx-table
+        @scrollLoad="scrollLoad"
+        ref="table"
+        v-bind="tableData"
+        @handleClick="handleClick"
+        class="table"
+      >
+        <template #toolBarBtns>
+          <el-button size="mini" @click="() => {}">功能1</el-button>
+        </template>
+        <template #operate_slot="scope">
+          <div>
+            <el-button plain type="danger" size="mini" @click="handleClick(scope)">按钮</el-button>
+          </div>
+        </template>
+      </nx-table>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.about {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
 }
 </style>
 ```
 
-![通用页面](/table.png)
-
-<details>
-<summary>展开查看</summary>
 </details>
+
+# Table Attributes
 
 | Prop 名称           | 类型                                        | 描述                         | 默认值                                     |
 | ------------------- | ------------------------------------------- | ---------------------------- | ------------------------------------------ |
