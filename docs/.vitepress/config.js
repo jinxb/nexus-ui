@@ -18,7 +18,7 @@ export default {
     nav: [
       { text: "指南", link: "/guide/index" },
       { text: "组件", link: "/components/tabs/" },
-      { text: "工具函数", link: "/tools/" },
+      { text: "工具函数", link: "/tools/useTableData/" },
     ],
     socialLinks: [{ icon: "github", link: "https://github.com/jinxb/nexus-ui" }],
     sidebar: {

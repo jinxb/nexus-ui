@@ -37,7 +37,7 @@ import {
 } from "./chunk-5RHOTUZN.js";
 import "./chunk-4EOJPDL2.js";
 
-// node_modules/.pnpm/@jinxb+nexus-ui@1.2.2/node_modules/@jinxb/nexus-ui/nxui.min.es.js
+// node_modules/.pnpm/@jinxb+nexus-ui@1.3.0/node_modules/@jinxb/nexus-ui/nxui.min.es.js
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => {
@@ -2907,7 +2907,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return openBlock(), createElementBlock("div", _hoisted_1$1);
 }
 var InitColor = _export_sfc(_sfc_main$1, [["render", _sfc_render]]);
-var _withScopeId = (n) => (pushScopeId("data-v-92810e87"), n = n(), popScopeId(), n);
+var _withScopeId = (n) => (pushScopeId("data-v-72dda2ae"), n = n(), popScopeId(), n);
 var _hoisted_1 = {
   key: 0,
   class: "icon-filterh"
@@ -3106,35 +3106,41 @@ var _sfc_main = defineComponent({
     const filter = ref(null);
     const pickerOptions = computed(() => {
       return {
-        shortcuts: [{
-          text: "今天",
-          onClick(picker) {
-            const end = /* @__PURE__ */ new Date();
-            const start = /* @__PURE__ */ new Date();
-            start.setTime(start.getTime() - 3600 * 1e3 * 24 * 0);
-            picker.emit("pick", [start, end]);
+        shortcuts: [
+          {
+            text: "今天",
+            onClick(picker) {
+              const end = /* @__PURE__ */ new Date();
+              const start = /* @__PURE__ */ new Date();
+              start.setTime(start.getTime() - 3600 * 1e3 * 24 * 0);
+              picker.emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近一周",
+            onClick(picker) {
+              const end = /* @__PURE__ */ new Date();
+              const start = /* @__PURE__ */ new Date();
+              start.setTime(start.getTime() - 3600 * 1e3 * 24 * 7);
+              picker.emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近一个月",
+            onClick(picker) {
+              const end = /* @__PURE__ */ new Date();
+              const start = /* @__PURE__ */ new Date();
+              start.setTime(start.getTime() - 3600 * 1e3 * 24 * 30);
+              picker.emit("pick", [start, end]);
+            }
           }
-        }, {
-          text: "最近一周",
-          onClick(picker) {
-            const end = /* @__PURE__ */ new Date();
-            const start = /* @__PURE__ */ new Date();
-            start.setTime(start.getTime() - 3600 * 1e3 * 24 * 7);
-            picker.emit("pick", [start, end]);
-          }
-        }, {
-          text: "最近一个月",
-          onClick(picker) {
-            const end = /* @__PURE__ */ new Date();
-            const start = /* @__PURE__ */ new Date();
-            start.setTime(start.getTime() - 3600 * 1e3 * 24 * 30);
-            picker.emit("pick", [start, end]);
-          }
-        }]
+        ]
       };
     });
     const currentPage = computed(() => props.page.pageNum + 1);
-    const pageExist = computed(() => props.page && props.page.pageNum >= 0 && props.page.pageSize && props.showPage);
+    const pageExist = computed(
+      () => props.page && props.page.pageNum >= 0 && props.page.pageSize && props.showPage
+    );
     watch(
       () => props.cacheKey,
       () => {
@@ -3157,6 +3163,9 @@ var _sfc_main = defineComponent({
     );
     const nxTable = ref();
     const nxToolbar = ref();
+    const handleRefreshChange = (status) => {
+      console.log("aaaaaaaaaaaaaa", status);
+    };
     watch(
       () => data.heightStyle,
       (value) => {
@@ -3285,9 +3294,11 @@ var _sfc_main = defineComponent({
       list = head.selectList.filter((item) => {
         return item.toLowerCase().indexOf(queryString.toLowerCase()) !== -1;
       });
-      cb(list.map((item) => {
-        return { value: item };
-      }));
+      cb(
+        list.map((item) => {
+          return { value: item };
+        })
+      );
     }
     function onChangeSearch(head) {
       let value = head.type === "number" ? parseFloat(head.template) : head.template;
@@ -3395,12 +3406,29 @@ var _sfc_main = defineComponent({
           "scroll-y": props.scrollY,
           "column-config": { minWidth: 88 },
           "print-config": {},
-          class: { "height-medium": data.heightStyle === "small" && props.heightControl, "height-compact": data.heightStyle === "mini" && props.heightControl },
-          "cell-style": { "border-right": "1px solid", "border-bottom": "1px solid", "border-color": data.borderColor },
-          "header-cell-style": { "border-right": "1px solid", "border-bottom": "1px solid", "border-color": data.borderColor },
-          "footer-cell-style": { "border-right": "1px solid", "border-bottom": "1px solid", "border-color": data.borderColor },
+          class: {
+            "height-medium": data.heightStyle === "small" && props.heightControl,
+            "height-compact": data.heightStyle === "mini" && props.heightControl
+          },
+          "cell-style": {
+            "border-right": "1px solid",
+            "border-bottom": "1px solid",
+            "border-color": data.borderColor
+          },
+          "header-cell-style": {
+            "border-right": "1px solid",
+            "border-bottom": "1px solid",
+            "border-color": data.borderColor
+          },
+          "footer-cell-style": {
+            "border-right": "1px solid",
+            "border-bottom": "1px solid",
+            "border-color": data.borderColor
+          },
           style: { "border-color": data.borderColor }
         }, toHandlers(props.events), {
+          toolbar: { refresh: true },
+          onRefreshChange: handleRefreshChange,
           onScroll: scrollEvent,
           onResizableChange: resizableChange
         }), {
@@ -3492,13 +3520,13 @@ var _sfc_main = defineComponent({
                           default: withCtx(() => [
                             createBaseVNode("div", _hoisted_9, [
                               createBaseVNode("div", {
-                                class: normalizeClass({ "disabled": head.options.length === head.template.length }),
+                                class: normalizeClass({ disabled: head.options.length === head.template.length }),
                                 onClick: ($event) => onClickReset(head)
-                              }, "重置", 10, _hoisted_10),
+                              }, " 重置 ", 10, _hoisted_10),
                               createBaseVNode("div", {
-                                class: normalizeClass({ "disabled": head.template.length === 0 }),
+                                class: normalizeClass({ disabled: head.template.length === 0 }),
                                 onClick: ($event) => onClickFilter(head)
-                              }, "筛选", 10, _hoisted_11)
+                              }, " 筛选 ", 10, _hoisted_11)
                             ]),
                             createBaseVNode("div", _hoisted_12, [
                               createVNode(_component_el_scrollbar, { style: { "height": "100%" } }, {
@@ -3632,7 +3660,7 @@ var _sfc_main = defineComponent({
         }, 16, ["data", "height", "highlight-hover-row", "show-overflow", "scroll-x", "scroll-y", "class", "cell-style", "header-cell-style", "footer-cell-style", "style"]), [
           [vShow, data.tableTh.length]
         ]),
-        __props.showSum ? (openBlock(), createElementBlock("div", _hoisted_30, "已加载" + toDisplayString(props.tr.length) + "条，共计" + toDisplayString(props.total) + "条", 1)) : createCommentVNode("", true),
+        __props.showSum ? (openBlock(), createElementBlock("div", _hoisted_30, " 已加载" + toDisplayString(props.tr.length) + "条，共计" + toDisplayString(props.total) + "条 ", 1)) : createCommentVNode("", true),
         withDirectives(createBaseVNode("div", {
           class: "scroll-loading",
           style: normalizeStyle({ bottom: props.showSum ? "54px" : "18px" })
@@ -3653,11 +3681,73 @@ var _sfc_main = defineComponent({
     };
   }
 });
-var NxTable = _export_sfc(_sfc_main, [["__scopeId", "data-v-92810e87"]]);
+var NxTable = _export_sfc(_sfc_main, [["__scopeId", "data-v-72dda2ae"]]);
 NxTable.name = "NxTable";
 NxTable.install = function(app) {
   app.component(NxTable.name, NxTable);
 };
+function useFetch(fetchFunction) {
+  async function fetchData(tableData, params) {
+    let data;
+    tableData.loading = true;
+    try {
+      data = await fetchFunction(params);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      tableData.loading = false;
+    }
+    return data;
+  }
+  return fetchData;
+}
+function useData(data) {
+  if (isRef(data)) {
+    return data.value;
+  }
+  return data;
+}
+function useTableData(table, tableData, params, interfaces, initialTab) {
+  const hashMap = /* @__PURE__ */ new Map();
+  let isMultipleOptions = false;
+  if (typeof interfaces === "object" && initialTab) {
+    isMultipleOptions = true;
+  }
+  const getListData = async (flag = false, fn = (res) => res) => {
+    var _a;
+    let fetchData;
+    if (isMultipleOptions) {
+      if (!hashMap.has(useData(initialTab))) {
+        const fetchApi = useFetch(interfaces[useData(initialTab)]);
+        hashMap.set(useData(initialTab), fetchApi);
+      }
+      fetchData = hashMap.get(useData(initialTab));
+    } else {
+      fetchData = useFetch(interfaces);
+    }
+    if (flag) {
+      tableData.tr = [];
+      params.current = 1;
+    }
+    const data = await fetchData(tableData, params);
+    if (!data)
+      return;
+    const { records = [], total = 0 } = fn(data);
+    tableData.tr.push(...records);
+    tableData.total = total;
+    (_a = table.value) == null ? void 0 : _a.tableEmit("updateData");
+  };
+  const scrollLoad = async () => {
+    if ((tableData == null ? void 0 : tableData.loading) || tableData.total <= tableData.tr.length)
+      return;
+    params.current++;
+    await getListData();
+  };
+  return {
+    getListData,
+    scrollLoad
+  };
+}
 var components = [NxTab, NxTable, NxTabs];
 var install = function(app) {
   components.forEach((cpn) => {
@@ -3672,7 +3762,8 @@ if (typeof window !== "undefined") {
 var Nxui = { install };
 export {
   Nxui,
-  db
+  db,
+  useTableData
 };
 /*! Bundled license information:
 
