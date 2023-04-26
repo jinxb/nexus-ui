@@ -23,4 +23,4 @@ $ pnpm install @jinxb/nexus-ui
 
 ## 浏览器直接引入
 
-暂不支持
+支持多种形式引用！
