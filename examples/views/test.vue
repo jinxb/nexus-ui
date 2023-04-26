@@ -44,6 +44,9 @@ const tableData: NxTableProps = reactive({
     export: true,
     refresh: { query: (...status) => { getList(true); console.log(status) } }
   },
+  attributes: {
+    'span-method': colspanMethod
+  },
   // showPage: true,
   operateColumn: true,
   operateFixed: true,
@@ -88,6 +91,25 @@ function findList(size) {
       })
     }, 100)
   })
+}
+
+function colspanMethod({ _rowIndex, columnIndex }) {
+  if (_rowIndex === 0) {
+    if (columnIndex === 3) {
+      return { rowspan: 3, colspan: 1 }
+    }
+  } else if (_rowIndex === 1 || _rowIndex === 2) {
+    if (columnIndex === 3) {
+      return { rowspan: 1, colspan: 0 }
+    }
+  }
+  // if (_rowIndex % 2 === 0) {
+  //   if (columnIndex === 2) {
+  //     return { rowspan: 1, colspan: 3 }
+  //   } else if (columnIndex === 3 || columnIndex === 4) {
+  //     return { rowspan: 0, colspan: 0 }
+  //   }
+  // }
 }
 
 const handleClick = (scope) => {
