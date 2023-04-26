@@ -1,4 +1,5 @@
 ## useTableData
+
 - `useTableData` hook 用于处理表格数据的获取和更新逻辑，接收以下参数：
   - `table`：一个表格组件实例
   - `tableData`：一个表格数据对象
@@ -12,7 +13,7 @@
   - `scrollLoad()`：用于滚动加载更多数据，并根据当前页码和总数判断是否需要发送请求。
 
 <details>
-<summary>查看源码</summary>
+<summary class="show">查看源码</summary>
 
 ```typescript
 // 定义一个接口，用于描述表格数据的类型
