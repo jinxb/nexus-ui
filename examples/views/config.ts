@@ -1,5 +1,5 @@
 import { reactive } from 'vue'
-import type { NxTableProps, IScreenData, ITableTh, NxTableInstance } from '@jinxb/nexus-ui'
+import type { IScreenData } from '@jinxb/nexus-ui'
 
 const tabs = [
   {

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from 'vue';
-import type { NxTableProps, IScreenData, ITableTh, NxTableInstance }
+import type { NxTableProps, ITableTh, NxTableInstance }
   from '@jinxb/nexus-ui';
 import { useTableData } from '@jinxb/nexus-ui';
 
