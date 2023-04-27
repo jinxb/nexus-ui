@@ -1,6 +1,6 @@
 <script lang='ts'>
 export default {
-  name: 'NxTab'
+  name: 'NxFilter'
 }
 </script>
 <script setup lang='ts'>
@@ -61,7 +61,7 @@ const handleQuery = () => {
 </script>
 
 <template>
-  <div class="nx-tab" :class="{ 'set-border': showBorder }">
+  <div class="nx-filter" :class="{ 'set-border': showBorder }">
     <div class="btn-list">
       <template v-for="(item, index) in props.btnList" :key="index">
         <el-button v-show="item.show" :size="item.size || 'small'" :disabled="item.disabled"
@@ -116,7 +116,7 @@ const handleQuery = () => {
   line-height: 28px;
 }
 
-.nx-tab {
+.nx-filter {
   display: flex;
   flex-direction: column;
   width: 100%;
