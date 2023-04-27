@@ -14,9 +14,6 @@ export default defineConfig({
         collapse_vars: true,
         reduce_vars: true
       },
-      mangle: {
-        properties: true // 混淆属性名
-      },
       format: {
         beautify: false,
         indent_level: 0,
