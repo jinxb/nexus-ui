@@ -2,10 +2,28 @@ import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import terser from '@rollup/plugin-terser'
 import { resolve } from 'path'
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    terser({
+      compress: {
+        drop_console: true, // 删除console语句
+        collapse_vars: true,
+        reduce_vars: true
+      },
+      mangle: {
+        properties: true // 混淆属性名
+      },
+      format: {
+        beautify: false,
+        indent_level: 0,
+        comments: false
+      }
+    })
+  ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./examples', import.meta.url))
@@ -15,7 +33,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'packages/index.ts'),
       name: 'Nxui',
-      formats: ['es', 'umd', 'cjs', 'iife'],
+      formats: ['es', 'umd', 'cjs'],
       fileName: (format) => `nxui.min.${format}.js`
     },
     rollupOptions: {
