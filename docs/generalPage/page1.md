@@ -215,13 +215,13 @@ onMounted(() => {
 <template>
   <div class="about">
     <nx-tabs :data="tabs" @change="handleTabChange"> </nx-tabs>
-    <nx-tab
+    <nx-filter
       @filterChange="filterChange"
       :btnList="funBtns"
       :screenData="screenData"
       v-model:page="page"
     >
-    </nx-tab>
+    </nx-filter>
     <div style="height: calc(100% - 210px)">
       <nx-table
         @scrollLoad="scrollLoad"
