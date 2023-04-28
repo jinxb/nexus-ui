@@ -55,6 +55,10 @@ export default {
               link: "/components/tabs/",
             },
             {
+              text: "filter",
+              link: "/components/filter/",
+            },
+            {
               text: "table",
               link: "/components/table/",
             },
