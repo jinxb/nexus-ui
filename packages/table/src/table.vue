@@ -262,15 +262,19 @@ const props = defineProps({
   },
   page: {
     type: Object,
-    pageSize: {
-      type: Number,
-      default: 30
+    required: true,
+    validator: (value: object) => {
+      // 检查是否有pageNum和pageSize或者current和size属性
+      const hasPageNum = Object.prototype.hasOwnProperty.call(value, "pageNum")
+      const hasPageSize = Object.prototype.hasOwnProperty.call(value, "pageSize")
+      const hasCurrent = Object.prototype.hasOwnProperty.call(value, "current")
+      const hasSize = Object.prototype.hasOwnProperty.call(value, "size")
+      // 检查是否成对出现并且不共存
+      return (
+        (hasPageNum && hasPageSize && !hasCurrent && !hasSize) ||
+        (hasCurrent && hasSize && !hasPageNum && !hasPageSize)
+      )
     },
-    pageNum: {
-      type: Number,
-      default: 0
-    },
-    default: null
   },
   showPage: {
     type: Boolean,
@@ -325,7 +329,12 @@ const pickerOptions = computed(() => {
 })
 const currentPage = computed(() => props.page.pageNum + 1)
 const pageExist = computed(
-  () => props.page && props.page.pageNum >= 0 && props.page.pageSize && props.showPage
+  () => {
+    if (props.page.pageNum !== undefined && props.page.pageSize !== undefined) {
+      return props.page && props.page.pageNum >= 0 && props.page.pageSize && props.showPage
+    }
+    return props.page && props.page.current >= 0 && props.page.size && props.showPage
+  }
 )
 watch(
   () => props.cacheKey,
