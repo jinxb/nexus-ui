@@ -20,7 +20,6 @@ const filterChange = () => {
   console.log('修改表单触发的事件')
 }
 
-
 /**
  * 表格配置
  * @table 绑定表格ref
@@ -35,7 +34,7 @@ let getList: (flag?: boolean) => void
 const tableData: NxTableProps = reactive({
   th: [] as ITableTh[],
   tr: [],
-  showSum: true,
+  // showSum: true,
   toolBar: {
     toolbarShow: true,
     print: true,
@@ -47,12 +46,12 @@ const tableData: NxTableProps = reactive({
   attributes: {
     'span-method': colspanMethod
   },
-  // showPage: true,
+  showPage: true,
   operateColumn: true,
   operateFixed: true,
   operateWidth: '120',
   total: 999,
-  loading: false
+  // loading: false
 })
 
 const { getListData, scrollLoad } = useTableData(table, tableData, page, ({ size }) => findList(size), tabVal)
@@ -124,8 +123,8 @@ onMounted(() => {
   <div class="about">
     <nx-tabs :data="tabs" @change="handleTabChange">
     </nx-tabs>
-    <nx-tab @filterChange="filterChange" :btnList="funBtns" :screenData="screenData" v-model:page="page">
-    </nx-tab>
+    <nx-filter @filterChange="filterChange" :btnList="funBtns" :screenData="screenData" v-model:page="page">
+    </nx-filter>
     <div style="height: calc(100% - 210px)">
       <nx-table @scrollLoad="scrollLoad" ref="table" v-bind="tableData" @handleClick="handleClick" class="table">
         <template #toolBarBtns>
