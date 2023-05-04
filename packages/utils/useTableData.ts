@@ -107,6 +107,7 @@ export default function useTableData(
   }
 
   const searchEvent = async (fn: () => any) => {
+    tableData.tr = []
     await getListData()
     fn && fn()
   }
