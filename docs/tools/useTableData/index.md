@@ -9,8 +9,10 @@
 - `useTableData` hook 返回以下两个异步函数：
   - `getListData(flag = false, fn = (res) => res)`：用于获取列表数据，并根据不同的选项卡调用不同的接口，并可以传入以下参数：
     - `flag`：一个标志位，表示是否需要清空表格数据和重置页码，默认为 false
+    - `pagination`：是否是分页，默认为 false
     - `fn`：一个处理函数，用于对请求结果进行自定义处理，默认为(res) => res
   - `scrollLoad()`：用于滚动加载更多数据，并根据当前页码和总数判断是否需要发送请求。
+  - `searchEvent()`：用于分页点击加载更多数据。
 
 <details>
 <summary class="show">查看源码</summary>
@@ -73,7 +75,7 @@ function useData(data: Ref<string>) {
  * @param interfaces 接口对象
  * @param initialTab 选项卡引用
  * @param params 参数对象
- * @returns 返回getListData和scrollLoad两个异步函数
+ * @returns 返回getListData和scrollLoad和searchEvent三个异步函数
  */
 export function useTableData(
   table: NxTableInstance,
@@ -101,25 +103,36 @@ export function useTableData(
     }
     if (flag) {
       tableData.tr = []
-      params.current = 1
+      tableData.page.current = 1
     }
     const data = await fetchData(tableData, params)
     if (!data) return
     const { records = [], total = 0 } = fn(data)
-    tableData.tr.push(...records)
+    if (!pagination) {
+      tableData.tr.push(...records)
+    } else {
+      tableData.tr = records
+    }
     tableData.total = total
     table.value?.tableEmit('updateData')
   }
 
   const scrollLoad = async () => {
     if (tableData?.loading || tableData.total <= tableData.tr.length) return
-    params.current++
+    tableData.page.current++
     await getListData()
+  }
+
+  const searchEvent = async (fn: () => any) => {
+    tableData.tr = []
+    await getListData(false, true)
+    fn && fn()
   }
 
   return {
     getListData,
-    scrollLoad
+    scrollLoad,
+    searchEvent
   }
 }
 ```
