@@ -106,8 +106,14 @@ export default function useTableData(
     await getListData()
   }
 
+  const searchEvent = async (fn: () => any) => {
+    await getListData()
+    fn && fn()
+  }
+
   return {
     getListData,
-    scrollLoad
+    scrollLoad,
+    searchEvent
   }
 }
