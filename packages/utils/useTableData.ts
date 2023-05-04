@@ -73,7 +73,7 @@ export default function useTableData(
     isMultipleOptions = true
   }
 
-  const getListData = async (flag = false, fn = (res: any) => res) => {
+  const getListData = async (flag = false, pagination = false, fn = (res: any) => res) => {
     let fetchData
     if (isMultipleOptions) {
       if (!hashMap.has(useData(initialTab!))) {
@@ -95,7 +95,11 @@ export default function useTableData(
     })
     if (!data) return
     const { records = [], total = 0 } = fn(data)
-    tableData.tr.push(...records)
+    if (!pagination) {
+      tableData.tr.push(...records)
+    } else {
+      tableData.tr = records
+    }
     tableData.total = total
     table.value?.tableEmit('updateData')
   }
@@ -108,7 +112,7 @@ export default function useTableData(
 
   const searchEvent = async (fn: () => any) => {
     tableData.tr = []
-    await getListData()
+    await getListData(false, true)
     fn && fn()
   }
 
