@@ -86,9 +86,13 @@ export default function useTableData(
     }
     if (flag) {
       tableData.tr = []
-      params.current = 1
+      tableData.page.current = 1
     }
-    const data = await fetchData(tableData, params)
+    const data = await fetchData(tableData, {
+      ...params,
+      current: tableData.page.current,
+      size: tableData.page.size
+    })
     if (!data) return
     const { records = [], total = 0 } = fn(data)
     tableData.tr.push(...records)
@@ -98,7 +102,7 @@ export default function useTableData(
 
   const scrollLoad = async () => {
     if (tableData?.loading || tableData.total <= tableData.tr.length) return
-    params.current++
+    tableData.page.current++
     await getListData()
   }
 
