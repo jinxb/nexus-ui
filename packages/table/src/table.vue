@@ -156,9 +156,9 @@
     <div v-show="props.loading" class="scroll-loading" :style="{ bottom: props.showSum ? '54px' : '18px' }">
       <span> <i class="el-icon-loading" />正在加载中 </span>
     </div>
-    <el-pagination v-if="pageExist" :current-page="currentPage" :page-sizes="[30, 40, 50, 100]" :page-size="pageSize"
-      layout="total, sizes, prev, pager, next, jumper" :total="props.total" @size-change="handleSizeChange"
-      @current-change="handleCurrentChange" />
+    <el-pagination style="position: fixed;bottom: 5px;" v-if="pageExist" :current-page="currentPage"
+      :page-sizes="[30, 40, 50, 100]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
+      :total="props.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
   </div>
 </template>
 <script lang="ts">
@@ -343,9 +343,9 @@ const pageSize = computed(() => {
 })
 const currentPage = computed(() => {
   if (props.page?.pageNum) {
-    return props.page?.pageNum + 1
+    return props.page?.pageNum
   }
-  return props.page?.current + 1
+  return props.page?.current
 })
 const pageExist = computed(() => props.page && pageNum.value >= 0 && pageSize.value && props.showPage)
 watch(() => pageNum.value, () => {
