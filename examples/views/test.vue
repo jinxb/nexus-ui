@@ -34,7 +34,7 @@ let getList: (flag?: boolean) => void
 const tableData: NxTableProps = reactive({
   th: [] as ITableTh[],
   tr: [],
-  // showSum: true,
+  showSum: false,
   toolBar: {
     toolbarShow: true,
     print: true,
@@ -46,12 +46,16 @@ const tableData: NxTableProps = reactive({
   attributes: {
     'span-method': colspanMethod
   },
+  page: {
+    current: 1,
+    size: 50
+  },
   showPage: true,
   operateColumn: true,
   operateFixed: true,
   operateWidth: '120',
   total: 999,
-  // loading: false
+  loading: false
 })
 
 const { getListData, scrollLoad } = useTableData(table, tableData, page, ({ size }) => findList(size), tabVal)

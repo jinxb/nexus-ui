@@ -13,8 +13,6 @@ const tabs = [
 ]
 
 const page = reactive({
-  current: 1,
-  size: 50,
   select: '',
   inputVal1: '',
   inputVa22: '',
