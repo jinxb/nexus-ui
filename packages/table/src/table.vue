@@ -343,9 +343,9 @@ const pageSize = computed(() => {
 })
 const currentPage = computed(() => {
   if (props.page?.pageNum) {
-    return props.page?.pageNum
+    return props.page?.pageNum + 1
   }
-  return props.page?.current
+  return props.page?.current + 1
 })
 const pageExist = computed(() => props.page && pageNum.value >= 0 && pageSize.value && props.showPage)
 watch(() => pageNum.value, () => {

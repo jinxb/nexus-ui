@@ -85,7 +85,6 @@ export default function useTableData(
       fetchData = useFetch(interfaces as FetchFunction)
     }
     if (flag) {
-      tableData.tr = []
       tableData.page.current = 1
     }
     const data = await fetchData(tableData, {
@@ -95,7 +94,7 @@ export default function useTableData(
     })
     if (!data) return
     const { records = [], total = 0 } = fn(data)
-    if (!pagination) {
+    if (!pagination && !flag) {
       tableData.tr.push(...records)
     } else {
       tableData.tr = records
