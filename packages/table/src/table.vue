@@ -1,6 +1,6 @@
 <template>
   <div class="nx-table-x"
-    :style="{ maxHeight: (props.showSum || pageExist) ? (props.toolBar.toolbarShow ? 'calc(100% - 86px)' : 'calc(100% - 36px)') : props.toolBar.toolbarShow ? 'calc(100% - 50px)' : '100%' }">
+    :style="{ maxHeight: (props.showSum || pageExist) ? (props.toolBar.toolbarShow ? 'calc(100% - 42px)' : 'calc(100% - 42px)') : props.toolBar.toolbarShow ? 'calc(100% - 50px)' : '100%' }">
     <keep-alive>
       <InitColor v-model:border-color="data.borderColor" :cache-key="props.cacheKey"
         v-model:height-style="data.heightStyle" />
@@ -21,21 +21,21 @@
       v-bind="props.attributes" auto-resize :height="props.height" :highlight-hover-row="props.highlightHoverRow"
       show-header show-header-overflow :show-overflow="props.showOverflow" :loading="false" :scroll-x="props.scrollX"
       :scroll-y="props.scrollY" :column-config="{ minWidth: 88 }" :print-config="{}" :class="{
-          'height-medium': data.heightStyle === 'small' && props.heightControl,
-          'height-compact': data.heightStyle === 'mini' && props.heightControl
-        }" :cell-style="{
-      'border-right': '1px solid',
-      'border-bottom': '1px solid',
-      'border-color': data.borderColor
-    }" :header-cell-style="{
-      'border-right': '1px solid',
-      'border-bottom': '1px solid',
-      'border-color': data.borderColor
-    }" :footer-cell-style="{
-      'border-right': '1px solid',
-      'border-bottom': '1px solid',
-      'border-color': data.borderColor
-    }" :style="{ 'border-color': data.borderColor }" v-on="props.events" :toolbar="{ refresh: true }"
+        'height-medium': data.heightStyle === 'small' && props.heightControl,
+        'height-compact': data.heightStyle === 'mini' && props.heightControl
+      }" :cell-style="{
+  'border-right': '1px solid',
+  'border-bottom': '1px solid',
+  'border-color': data.borderColor
+}" :header-cell-style="{
+  'border-right': '1px solid',
+  'border-bottom': '1px solid',
+  'border-color': data.borderColor
+}" :footer-cell-style="{
+  'border-right': '1px solid',
+  'border-bottom': '1px solid',
+  'border-color': data.borderColor
+}" :style="{ 'border-color': data.borderColor }" v-on="props.events" :toolbar="{ refresh: true }"
       @refresh-change="handleRefreshChange" @scroll="scrollEvent" @resizable-change="resizableChange">
       <template v-for="head in data.tableTh">
         <vxe-table-colgroup v-if="head.children && head.show !== false && head.visible !== false" :key="head.title"
@@ -112,8 +112,8 @@
                   <el-input v-if="!head.selectList" v-model="head.template" placeholder="请输入搜索内容" maxlength="30" clearable
                     @change="onChangeSearch(head)" />
                   <el-autocomplete v-else v-model="head.template" placeholder="请输入搜索内容" :fetch-suggestions="(queryString, cb) => {
-                      querySearch(queryString, cb, head)
-                    }
+                    querySearch(queryString, cb, head)
+                  }
                     " clearable :name="head.field" :popper-append-to-body="false" @change="onChangeSearch(head)"
                     @select="onChangeSearch(head)" @clear="onChangeSearch(head)" />
                   <template #reference>
