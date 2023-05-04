@@ -1,6 +1,6 @@
 <template>
   <div class="nx-table-x"
-    :style="{ maxHeight: props.showSum ? (props.toolBar.toolbarShow ? 'calc(100% - 86px)' : 'calc(100% - 36px)') : props.toolBar.toolbarShow ? 'calc(100% - 50px)' : '100%' }">
+    :style="{ maxHeight: (props.showSum || pageExist) ? (props.toolBar.toolbarShow ? 'calc(100% - 86px)' : 'calc(100% - 36px)') : props.toolBar.toolbarShow ? 'calc(100% - 50px)' : '100%' }">
     <keep-alive>
       <InitColor v-model:border-color="data.borderColor" :cache-key="props.cacheKey"
         v-model:height-style="data.heightStyle" />
@@ -156,9 +156,9 @@
     <div v-show="props.loading" class="scroll-loading" :style="{ bottom: props.showSum ? '54px' : '18px' }">
       <span> <i class="el-icon-loading" />正在加载中 </span>
     </div>
-    <el-pagination v-if="pageExist" :current-page="currentPage" :page-sizes="[30, 40, 50, 100]"
-      :page-size="props.page.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="props.total"
-      @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+    <el-pagination v-if="pageExist" :current-page="currentPage" :page-sizes="[30, 40, 50, 100]" :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper" :total="props.total" @size-change="handleSizeChange"
+      @current-change="handleCurrentChange" />
   </div>
 </template>
 <script lang="ts">
@@ -327,13 +327,41 @@ const pickerOptions = computed(() => {
     ]
   }
 })
-const currentPage = computed(() => props.page.pageNum + 1)
-const pageExist = computed(
+const pageNum = computed(() => {
+  if (props.page?.pageNum) {
+    return props.page?.pageNum
+  } else {
+    return props.page?.current
+  }
+})
+const pageSize = computed(() => {
+  if (props.page?.pageSize) {
+    return props.page?.pageSize
+  } else {
+    return props.page?.size
+  }
+})
+const currentPage = computed(() => {
+  if (props.page?.pageNum) {
+    return props.page?.pageNum + 1
+  }
+  return props.page?.current + 1
+})
+const pageExist = computed(() => props.page && pageNum.value >= 0 && pageSize.value && props.showPage)
+watch(() => pageNum.value, () => {
+  emit('searchEvent')
+}, { immediate: false })
+watch(
+  () => props.cacheKey,
   () => {
-    if (props.page.pageNum !== undefined && props.page.pageSize !== undefined) {
-      return props.page && props.page.pageNum >= 0 && props.page.pageSize && props.showPage
-    }
-    return props.page && props.page.current >= 0 && props.page.size && props.showPage
+    data.showFilter = false
+    data.tableTh = []
+    setTimeout(() => {
+      data.showFilter = true
+      nextTick(async () => {
+        data.tableTh = await filter.value!.initDropdownData()
+      })
+    }, 50)
   }
 )
 watch(
@@ -357,87 +385,6 @@ watch(
 )
 const nxTable = ref<VxeTableInstance>()
 const nxToolbar = ref<VxeToolbarInstance>()
-
-// 打印样式
-const printStyle = `
-            .title {
-              text-align: center;
-            }
-            .my-list-row {
-              display: inline-block;
-              width: 100%;
-            }
-            .my-list-col {
-              float: left;
-              width: 33.33%;
-              height: 28px;
-              line-height: 28px;
-            }
-            .my-top,
-            .my-bottom {
-              font-size: 12px;
-            }
-            .my-top {
-              margin-bottom: 5px;
-            }
-            .my-bottom {
-              margin-top: 30px;
-              text-align: right;
-            }
-            `
-// 打印顶部内容模板
-const topHtml = `
-            <h1 class="title">出货单据</h1>
-            <div class="my-top">
-              <div class="my-list-row">
-                <div class="my-list-col">商品名称：vxe-table</div>
-                <div class="my-list-col">发货单号：X2665847132654</div>
-                <div class="my-list-col">发货日期：2020-09-20</div>
-              </div>
-              <div class="my-list-row">
-                <div class="my-list-col">收货姓名：小徐</div>
-                <div class="my-list-col">收货地址：火星第七区18号001</div>
-                <div class="my-list-col">联系电话：10086</div>
-              </div>
-            </div>
-            `
-
-// 打印底部内容模板
-const bottomHtml = `
-            <div class="my-bottom">
-              <div class="my-list-row">
-                <div class="my-list-col"></div>
-                <div class="my-list-col">创建人：小徐</div>
-                <div class="my-list-col">创建日期：2020-09-20</div>
-              </div>
-            </div>
-            `
-const printEvent1 = () => {
-  const $table = nxTable.value
-  $table?.print({
-    sheetName: '打印出货单据',
-    style: printStyle,
-    columns: [{ type: 'seq' }, { field: 'name' }, { field: 'role' }, { field: 'address' }],
-    beforePrintMethod: ({ content }) => {
-      // 拦截打印之前，返回自定义的 html 内容
-      return topHtml + content + bottomHtml
-    }
-  })
-}
-
-const printSelectEvent1 = () => {
-  const $table = nxTable.value
-  $table?.print({
-    sheetName: '打印勾选行',
-    style: printStyle,
-    mode: 'selected',
-    columns: [{ type: 'seq' }, { field: 'name' }, { field: 'role' }, { field: 'address' }],
-    beforePrintMethod: ({ content }) => {
-      // 拦截打印之前，返回自定义的 html 内容
-      return topHtml + content + bottomHtml
-    }
-  })
-}
 
 const handleRefreshChange = (status) => {
   console.log('aaaaaaaaaaaaaa', status)
@@ -486,7 +433,11 @@ onMounted(async () => {
 })
 function handleCurrentChange(val) {
   const data = props.page
-  data.pageNum = val - 1
+  if (data?.pageNum) {
+    data.pageNum = val - 1
+  } else {
+    data.current = val - 1
+  }
   emit('update:page', data)
   emit('pageChange')
 }
