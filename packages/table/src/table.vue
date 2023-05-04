@@ -1,6 +1,6 @@
 <template>
   <div class="nx-table-x"
-    :style="{ maxHeight: (props.showSum || pageExist) ? (props.toolBar.toolbarShow ? 'calc(100% - 42px)' : 'calc(100% - 42px)') : props.toolBar.toolbarShow ? 'calc(100% - 50px)' : '100%' }">
+    :style="{ maxHeight: (props.showSum || pageExist) ? (props.toolBar.toolbarShow ? 'calc(100% - 92px)' : 'calc(100% - 42px)') : props.toolBar.toolbarShow ? 'calc(100% - 50px)' : '100%' }">
     <keep-alive>
       <InitColor v-model:border-color="data.borderColor" :cache-key="props.cacheKey"
         v-model:height-style="data.heightStyle" />
