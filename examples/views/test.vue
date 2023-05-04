@@ -58,8 +58,11 @@ const tableData: NxTableProps = reactive({
   loading: false
 })
 
-const { getListData, scrollLoad } = useTableData(table, tableData, page, ({ size }) => findList(size), tabVal)
-
+const { getListData } = useTableData(table, tableData, page, ({ size }) => findList(size), tabVal)
+const searchEvent = (...params) => {
+  console.log('searchEvent', params
+  );
+}
 getList = (flag) => { getListData(flag) }
 
 const setTh = (tab: string) => {
@@ -130,7 +133,7 @@ onMounted(() => {
     <nx-filter @filterChange="filterChange" :btnList="funBtns" :screenData="screenData" v-model:page="page">
     </nx-filter>
     <div style="height: calc(100% - 210px)">
-      <nx-table @scrollLoad="scrollLoad" ref="table" v-bind="tableData" @handleClick="handleClick" class="table">
+      <nx-table @searchEvent="searchEvent" ref="table" v-bind="tableData" @handleClick="handleClick" class="table">
         <template #toolBarBtns>
           <el-button size="mini" @click="() => { }">功能1</el-button>
         </template>
