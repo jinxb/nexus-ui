@@ -6,7 +6,7 @@
 ### Props
 | Props | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| btnList | Array<IBtnListType> | [] | 按钮列表 |
+| btnList | IBtnListType[] | [] | 按钮列表 |
 | screenData | IScreenData[] | [] | 筛选项列表 |
 | page | Object | {} | 当前页筛选条件 |
 | showBorder | Boolean | false | 是否显示边框 |
