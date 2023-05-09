@@ -36,7 +36,7 @@
   'border-bottom': '1px solid',
   'border-color': data.borderColor
 }" :style="{ 'border-color': data.borderColor }" v-on="props.events" :toolbar="{ refresh: true }"
-      @refresh-change="handleRefreshChange" @scroll="scrollEvent" @resizable-change="resizableChange">
+      @scroll="scrollEvent" @resizable-change="resizableChange">
       <template v-for="head in data.tableTh">
         <vxe-table-colgroup v-if="head.children && head.show !== false && head.visible !== false" :key="head.title"
           v-bind="head">
@@ -156,9 +156,18 @@
     <div v-show="props.loading" class="scroll-loading" :style="{ bottom: props.showSum ? '54px' : '18px' }">
       <span> <i class="el-icon-loading" />正在加载中 </span>
     </div>
-    <el-pagination style="position: fixed;bottom: 5px;" v-if="pageExist" :current-page="currentPage"
-      :page-sizes="[30, 40, 50, 100]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
-      :total="props.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+    <vxe-pager v-if="pageExist && data.tableTh.length" style="height: 42px" align="center" perfect
+      v-model:current-page="currentPage" v-model:page-size="pageSize" :total="Number(props.total)"
+      :page-sizes="props.page.pageSizes || [10, 20, 100, { label: '大量数据', value: 1000 }, { label: '全量数据', value: -1 }]"
+      :layouts="props.page.layouts || ['PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'Sizes', 'FullJump', 'Total']"
+      @page-change="handleCurrentChange">
+      <template #left>
+        <slot name="pagerLeft"></slot>
+      </template>
+      <template #right>
+        <slot name="pagerRight"></slot>
+      </template>
+    </vxe-pager>
   </div>
 </template>
 <script lang="ts">
@@ -327,27 +336,62 @@ const pickerOptions = computed(() => {
     ]
   }
 })
-const pageNum = computed(() => {
-  if (props.page?.pageNum) {
-    return props.page?.pageNum
-  } else {
+const pageNum = computed({
+  get: () => {
+    if (props.page?.pageNum) {
+      return props.page?.pageNum
+    } else {
+      return props.page?.current
+    }
+  },
+  set: (val) => {
+    if (props.page?.pageNum) {
+      const newPage = { ...props.page, pageNum: val }
+      emit('update:page', newPage)
+    } else {
+      const newPage = { ...props.page, current: val }
+      emit('update:page', newPage)
+    }
+  }
+})
+const pageSize = computed({
+  get: () => {
+    if (props.page?.pageSize) {
+      return props.page?.pageSize
+    } else {
+      return props.page?.size
+    }
+  },
+  set: (val) => {
+    if (props.page?.pageSize) {
+      const newPage = { ...props.page, pageSize: val }
+      emit('update:page', newPage)
+    } else {
+      const newPage = { ...props.page, size: val }
+      emit('update:page', newPage)
+    }
+  }
+})
+const currentPage = computed({
+  get: () => {
+    if (props.page?.pageNum) {
+      return props.page?.pageNum
+    }
     return props.page?.current
+  },
+  set: (val) => {
+    if (props.page?.pageNum) {
+      const newPage = { ...props.page, pageNum: val }
+      emit('update:page', newPage)
+    } else {
+      const newPage = { ...props.page, current: val }
+      emit('update:page', newPage)
+    }
   }
 })
-const pageSize = computed(() => {
-  if (props.page?.pageSize) {
-    return props.page?.pageSize
-  } else {
-    return props.page?.size
-  }
+const pageExist = computed(() => {
+  return props.page && pageNum.value >= 0 && pageSize.value && props.showPage
 })
-const currentPage = computed(() => {
-  if (props.page?.pageNum) {
-    return props.page?.pageNum + 1
-  }
-  return props.page?.current + 1
-})
-const pageExist = computed(() => props.page && pageNum.value >= 0 && pageSize.value && props.showPage)
 watch(() => pageNum.value, () => {
   emit('searchEvent')
 }, { immediate: false })
@@ -386,9 +430,6 @@ watch(
 const nxTable = ref<VxeTableInstance>()
 const nxToolbar = ref<VxeToolbarInstance>()
 
-const handleRefreshChange = (status) => {
-  console.log('aaaaaaaaaaaaaa', status)
-}
 watch(
   () => data.heightStyle,
   (value) => {
@@ -431,20 +472,18 @@ onMounted(async () => {
     }
   })
 })
-function handleCurrentChange(val) {
+function handleCurrentChange({ currentPage, pageSize }) {
   const data = props.page
   if (data?.pageNum) {
-    data.pageNum = val - 1
+    data.pageNum = currentPage
   } else {
-    data.current = val - 1
+    data.current = currentPage
   }
-  emit('update:page', data)
-  emit('pageChange')
-}
-function handleSizeChange(val) {
-  const data = props.page
-  data.pageSize = val
-  db.set('pageSize', val)
+  if (data?.pageSize) {
+    data.pageSize = pageSize
+  } else {
+    data.size = pageSize
+  }
   emit('update:page', data)
   emit('pageChange')
 }

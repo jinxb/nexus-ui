@@ -20,9 +20,9 @@ export default {
       default: ''
     }
   },
-  async activated() {
-    const borderColor = await db.get('nx_border-color')
-    const heightStyle = await db.get('nx_height-style')
+  async activated () {
+    const borderColor = await db.get('Nx_border-color')
+    const heightStyle = await db.get('Nx_height-style')
     if (borderColor) { this.$emit('update:borderColor', borderColor) }
     if (heightStyle) { this.$emit('update:heightStyle', heightStyle) }
   }
