@@ -35,8 +35,8 @@
   'border-right': '1px solid',
   'border-bottom': '1px solid',
   'border-color': data.borderColor
-}" :style="{ 'border-color': data.borderColor }" v-on="props.events" :toolbar="{ refresh: true }"
-      @scroll="scrollEvent" @resizable-change="resizableChange">
+}" :style="{ 'border-color': data.borderColor }" v-on="props.events" :toolbar="{ refresh: true }" @scroll="scrollEvent"
+      @resizable-change="resizableChange">
       <template v-for="head in data.tableTh">
         <vxe-table-colgroup v-if="head.children && head.show !== false && head.visible !== false" :key="head.title"
           v-bind="head">
@@ -392,9 +392,6 @@ const currentPage = computed({
 const pageExist = computed(() => {
   return props.page && pageNum.value >= 0 && pageSize.value && props.showPage
 })
-watch(() => pageNum.value, () => {
-  emit('searchEvent')
-}, { immediate: false })
 watch(
   () => props.cacheKey,
   () => {
@@ -486,6 +483,7 @@ function handleCurrentChange({ currentPage, pageSize }) {
   }
   emit('update:page', data)
   emit('pageChange')
+  emit('searchEvent')
 }
 function fixedChange(column, type) {
   data.tableTh.forEach((item) => {
