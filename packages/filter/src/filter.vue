@@ -75,18 +75,19 @@ const handleQuery = () => {
           <div class="form-block-label" :style="{ width: (item.width || 130) + 'px' }">
             <span class="label" v-if="item.label">{{ item.label }}</span>
           </div>
-          <el-select :style="{ width: (item.width || 240) + 'px' }" v-bind="item" :clearable="item.clearable"
+          <el-select :style="{ width: (item.width || 240) + 'px !important;' }" v-bind="item" :clearable="item.clearable"
             @change="onSelectChange($event, item.key)" v-model="data.page[item.key]"
             :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'">
             <el-option v-for="itemB in item.options" :key="itemB.value" v-bind="itemB">
             </el-option>
           </el-select>
           <el-date-picker v-if="item.type === 'date'" v-model="data.page[item.key]" v-bind="item" type="daterange"
-            :style="{ width: (item.width || 240) + 'px' }" range-separator="至" start-placeholder="开始日期"
+            :style="{ width: (item.width || 240) + 'px !important;' }" range-separator="至" start-placeholder="开始日期"
             end-placeholder="结束日期" value-format="YYYY-MM-DD" @change="onSelectChange($event, item.key)">
           </el-date-picker>
-          <el-input :style="{ width: (item.width || 240) + 'px' }" @change="onSelectChange($event, item.key)" clearable
-            v-if="item.type === 'input'" v-model.trim="data.page[item.key]" :placeholder="item.placeholder || '请输入'" />
+          <el-input :style="{ width: (item.width || 240) + 'px !important;' }" @change="onSelectChange($event, item.key)"
+            clearable v-if="item.type === 'input'" v-model.trim="data.page[item.key]"
+            :placeholder="item.placeholder || '请输入'" />
         </div>
       </template>
       <slot name="other" />
@@ -114,7 +115,13 @@ const handleQuery = () => {
 :deep(.el-input__icon),
 :deep(.el-range-separator) {
   line-height: 28px;
+  font-size: 12px !important;
 }
+
+:deep(.el-range-input) {
+  font-size: 12px !important;
+}
+
 
 .nx-filter {
   display: flex;

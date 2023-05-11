@@ -17,10 +17,11 @@
         :table-th="data.tableTh" :dropdown-class="props.dropdownClass" @fixedChange="fixedChange"
         @checkChange="checkChange" @filterSort="filterSort" />
     </div>
-    <vxe-table v-show="data.tableTh.length" ref="nxTable" border="none" :data="props.tr" resizable
-      v-bind="props.attributes" auto-resize :height="props.height" :highlight-hover-row="props.highlightHoverRow"
-      show-header show-header-overflow :show-overflow="props.showOverflow" :loading="false" :scroll-x="props.scrollX"
-      :scroll-y="props.scrollY" :column-config="{ minWidth: 88 }" :print-config="{}" :class="{
+    <vxe-table style="flex: 1 !important;" v-show="data.tableTh.length" ref="nxTable" border="none" :data="props.tr"
+      resizable v-bind="props.attributes" auto-resize :height="props.height"
+      :highlight-hover-row="props.highlightHoverRow" show-header show-header-overflow :show-overflow="props.showOverflow"
+      :loading="false" :scroll-x="props.scrollX" :scroll-y="props.scrollY" :column-config="{ minWidth: 88 }"
+      :print-config="{}" :class="{
         'height-medium': data.heightStyle === 'small' && props.heightControl,
         'height-compact': data.heightStyle === 'mini' && props.heightControl
       }" :cell-style="{
@@ -156,7 +157,7 @@
     <div v-show="props.loading" class="scroll-loading" :style="{ bottom: props.showSum ? '54px' : '18px' }">
       <span> <i class="el-icon-loading" />正在加载中 </span>
     </div>
-    <vxe-pager v-if="pageExist && data.tableTh.length" style="height: 42px" align="center" perfect
+    <vxe-pager v-if="pageExist && data.tableTh.length" style="height: 42px; padding: 5px 0;" align="center" perfect
       v-model:current-page="currentPage" v-model:page-size="pageSize" :total="Number(props.total)"
       :page-sizes="props.page.pageSizes || [10, 20, 100, { label: '大量数据', value: 1000 }, { label: '全量数据', value: -1 }]"
       :layouts="props.page.layouts || ['PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'Sizes', 'FullJump', 'Total']"
@@ -596,6 +597,8 @@ defineExpose({
 
 <style lang="scss" scoped>
 .nx-table-x {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   position: relative;
   flex: 1;

@@ -55,6 +55,10 @@ if (props.initEmit && activeName.value) {
     margin: 0;
   }
 
+  :deep(.el-tabs__content) {
+    padding: 0 !important;
+  }
+
   :deep(.el-tabs__nav) {
     transform: translateX(16px) !important;
   }
