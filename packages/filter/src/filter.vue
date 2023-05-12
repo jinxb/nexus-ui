@@ -110,7 +110,6 @@ const handleQuery = () => {
 
 :deep(.el-input__inner),
 :deep(.el-range-separator) {
-  padding: 0 !important;
   height: 28px !important;
 }
 
