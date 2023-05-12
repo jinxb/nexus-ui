@@ -61,7 +61,7 @@ const handleQuery = () => {
 </script>
 
 <template>
-  <div class="nx-filter" :class="{ 'set-border': showBorder }">
+  <div class="nx-filter nx-default-color" :class="{ 'set-border': showBorder }">
     <div class="btn-list">
       <template v-for="(item, index) in props.btnList" :key="index">
         <el-button v-show="item.show" :size="item.size || 'small'" :disabled="item.disabled"
@@ -75,17 +75,17 @@ const handleQuery = () => {
           <div class="form-block-label" :style="{ width: (item.width || 130) + 'px' }">
             <span class="label" v-if="item.label">{{ item.label }}</span>
           </div>
-          <el-select :style="{ width: (item.width || 240) + 'px !important;' }" v-bind="item" :clearable="item.clearable"
+          <el-select :style="{ width: (item.width || 240) + 'px !important' }" v-bind="item" :clearable="item.clearable"
             @change="onSelectChange($event, item.key)" v-model="data.page[item.key]"
             :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'">
             <el-option v-for="itemB in item.options" :key="itemB.value" v-bind="itemB">
             </el-option>
           </el-select>
           <el-date-picker v-if="item.type === 'date'" v-model="data.page[item.key]" v-bind="item" type="daterange"
-            :style="{ width: (item.width || 240) + 'px !important;' }" range-separator="至" start-placeholder="开始日期"
+            :style="{ width: (item.width || 240) + 'px !important' }" range-separator="至" start-placeholder="开始日期"
             end-placeholder="结束日期" value-format="YYYY-MM-DD" @change="onSelectChange($event, item.key)">
           </el-date-picker>
-          <el-input :style="{ width: (item.width || 240) + 'px !important;' }" @change="onSelectChange($event, item.key)"
+          <el-input :style="{ width: (item.width || 240) + 'px !important' }" @change="onSelectChange($event, item.key)"
             clearable v-if="item.type === 'input'" v-model.trim="data.page[item.key]"
             :placeholder="item.placeholder || '请输入'" />
         </div>
@@ -106,15 +106,19 @@ const handleQuery = () => {
 </template>
 
 <style lang='scss' scoped>
+@import url(../../assets/css/index.css);
+
 :deep(.el-input__inner),
 :deep(.el-range-separator) {
-  height: 28px;
+  padding: 0 !important;
+  height: 28px !important;
 }
 
 :deep(.el-input--suffix),
 :deep(.el-input__icon),
 :deep(.el-range-separator) {
-  line-height: 28px;
+  width: auto !important;
+  line-height: 28px !important;
   font-size: 12px !important;
 }
 

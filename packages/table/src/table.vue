@@ -1,5 +1,5 @@
 <template>
-  <div class="nx-table-x"
+  <div class="nx-table-x nx-default-color"
     :style="{ maxHeight: (props.showSum || pageExist) ? (props.toolBar.toolbarShow ? 'calc(100% - 92px)' : 'calc(100% - 42px)') : props.toolBar.toolbarShow ? 'calc(100% - 50px)' : '100%' }">
     <keep-alive>
       <InitColor v-model:border-color="data.borderColor" :cache-key="props.cacheKey"
@@ -596,6 +596,8 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+@import url(../../assets/css/index.css);
+
 .nx-table-x {
   display: flex;
   flex-direction: column;

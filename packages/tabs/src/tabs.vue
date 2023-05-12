@@ -1,5 +1,5 @@
 <template>
-  <div class="nx-tabs">
+  <div class="nx-tabs nx-default-color">
     <el-tabs v-model="activeName" :type="tabType" @tab-click="handleClick">
       <template v-for="(tab, index) in data">
         <el-tab-pane v-if="tab.visible !== false" :key="index" :disabled="tab.disabled" :label="tab.label"
@@ -50,6 +50,8 @@ if (props.initEmit && activeName.value) {
 
 </script>
 <style lang="scss" scoped>
+@import url(../../assets/css/index.css);
+
 .nx-tabs {
   :deep(.el-tabs__header) {
     margin: 0;
