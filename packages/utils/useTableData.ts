@@ -72,8 +72,10 @@ export default function useTableData(
   if (typeof interfaces === 'object' && initialTab) {
     isMultipleOptions = true
   }
+  let handleResultData
 
-  const getListData = async (flag = false, pagination = false, fn = (res: any) => res) => {
+  const getListData = async (flag = false, pagination = false, fn = (res: any) => res?.data) => {
+    handleResultData = fn
     let fetchData
     if (isMultipleOptions) {
       if (!hashMap.has(useData(initialTab!))) {
@@ -93,7 +95,7 @@ export default function useTableData(
       size: tableData.page.size
     })
     if (!data) return
-    const { records = [], total = 0 } = fn(data)
+    const { records = [], total = 0 } = handleResultData(data)
     if (!pagination && !flag) {
       tableData.tr.push(...records)
     } else {
@@ -106,12 +108,12 @@ export default function useTableData(
   const scrollLoad = async () => {
     if (tableData?.loading || tableData.total <= tableData.tr.length) return
     tableData.page.current++
-    await getListData()
+    await getListData(false, false, handleResultData)
   }
 
   const searchEvent = async (fn: () => any) => {
     tableData.tr = []
-    await getListData(false, true)
+    await getListData(false, true, handleResultData)
     fn && fn()
   }
 
