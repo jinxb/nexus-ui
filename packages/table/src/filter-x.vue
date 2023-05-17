@@ -1,5 +1,5 @@
 <template>
-  <div class="nx-table-filter" :class="{'default-style': !hasToolBar, 'has-tools': hasToolBar}">
+  <div class="nx-table-filter" :class="{ 'default-style': !hasToolBar, 'has-tools': hasToolBar }">
     <el-dropdown trigger="click" :hide-on-click="false" placement="bottom-end" @visible-change="visibleChange">
       <el-button size="mini" class="filter-button">
         <i class="el-icon-s-grid" />
@@ -91,7 +91,7 @@ const props = defineProps({
   }
 })
 const emit = defineEmits<{
-  (e:string, value?:any, params?: any):void
+  (e: string, value?: any, params?: any): void
 }>()
 const show = ref(true)
 watch(
@@ -100,17 +100,17 @@ watch(
     cacheDropdownData()
   }
 )
-function colorChange (value) {
+function colorChange(value) {
   emit('update:borderColor', value)
-  db.set('nx_border-color', props.borderColor)
+  db.set('Nx_border-color', props.borderColor)
 }
-function setFixed (item, type) {
+function setFixed(item, type) {
   emit('fixedChange', item, type)
 }
-function checkChange (item) {
+function checkChange(item) {
   emit('checkChange', item)
 }
-function sort (evt) {
+function sort(evt) {
   const { oldIndex, newIndex } = evt
   emit('filterSort', oldIndex, newIndex)
   show.value = false
@@ -121,7 +121,7 @@ function sort (evt) {
     }, 100)
   })
 }
-function visibleChange (flag) {
+function visibleChange(flag) {
   if (flag) {
     const dom = document.querySelector(props.dropdownClass ? `.${props.dropdownClass}` : '.nx-dropdown-items')
     // eslint-disable-next-line no-undef
@@ -134,7 +134,7 @@ function visibleChange (flag) {
   }
 }
 // 缓存配置
-function cacheDropdownData () {
+function cacheDropdownData() {
   if (!props.cacheKey) {
     return
   }
@@ -204,12 +204,14 @@ defineExpose({
     }
   }
 }
+
 .default-style {
   position: absolute;
   right: 0;
   top: -40px;
   z-index: 9;
 }
+
 .has-tools {
   width: 56px;
   display: flex;

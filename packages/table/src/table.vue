@@ -443,7 +443,7 @@ watch(
   () => data.borderColor,
   (value) => {
     if (!value) data.borderColor = '#E6E8EA'
-    db.set('nx_border-color', value)
+    db.set('Nx_border-color', value)
   }
 )
 onMounted(async () => {
