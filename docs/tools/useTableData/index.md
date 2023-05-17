@@ -120,12 +120,12 @@ export function useTableData(
   const scrollLoad = async () => {
     if (tableData?.loading || tableData.total <= tableData.tr.length) return
     tableData.page.current++
-    await getListData()
+    await getListData(false, false, handleResultData)
   }
 
   const searchEvent = async (fn: () => any) => {
     tableData.tr = []
-    await getListData(false, true)
+    await getListData(false, true, handleResultData)
     fn && fn()
   }
 

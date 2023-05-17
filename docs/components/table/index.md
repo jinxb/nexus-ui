@@ -4,6 +4,8 @@
 
 ![通用页面](/table_cpn.png)
 
+#### 支持和分页滚动加载
+
 <details>
 <summary class="show">展开查看</summary>
 

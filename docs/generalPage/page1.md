@@ -175,7 +175,7 @@ const setTh = (tab: string) => {
   const th = [
     { field: 'checkbox', width: 50, type: 'checkbox' },
     { field: 'id', title: '序号', handleClickShow: false },
-    { field: 'name', title: '序号2', show: tab === tabVal.value },
+    { field: 'name', title: '序号2', show: tab === tabs[0].name },
     { field: 'role', title: '序号3' },
     { field: 'age', title: '序号4' }
   ] as ITableTh[]
