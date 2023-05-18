@@ -151,7 +151,7 @@
       </vxe-table-column>
       <template #empty>{{ props.loading ? '数据加载中' : '暂无数据' }}</template>
     </vxe-table>
-    <div v-if="showSum" class="table-sum">
+    <div v-if="showSum" class="table-sum nx-default-color">
       已加载{{ props.tr.length }}条，共计{{ props.total }}条
     </div>
     <div v-show="props.loading" class="scroll-loading" :style="{ bottom: props.showSum ? '54px' : '18px' }">
@@ -693,6 +693,7 @@ defineExpose({
 
   .table-sum {
     line-height: 36px;
+    padding-left: 8px;
     display: flex;
     align-items: center;
     color: rgba(96, 98, 102, 100);
