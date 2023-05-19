@@ -3,6 +3,7 @@ import { onMounted, reactive, ref } from 'vue';
 import type { NxTableProps, ITableTh, NxTableInstance }
   from '@jinxb/nexus-ui';
 import { useTableData } from '@jinxb/nexus-ui';
+import NxTable from '../../packages/table/src/table.vue';
 
 import { tabs, page, screenData, funBtns } from './config';
 
@@ -36,6 +37,29 @@ const tableData: NxTableProps = reactive({
   tr: [],
   showSum: false,
   toolBar: {
+    forms: [
+      {
+        label: '渠道商品编码',
+        type: 'select',
+        key: 'select',
+        placeholder: '111',
+        options: [
+          {
+            label: '1',
+            value: '1'
+          },
+          {
+            label: '2',
+            value: '2'
+          }
+        ]
+      },
+      {
+        label: '商品编码',
+        type: 'date',
+        key: 'date'
+      }
+    ],
     toolbarShow: true,
     print: true,
     zoom: true,
@@ -44,32 +68,35 @@ const tableData: NxTableProps = reactive({
     refresh: { query: (...status) => { getList(true); console.log(status) } }
   },
   attributes: {
-    'span-method': colspanMethod
+    'span-method': colspanMethod,
+    'checkbox-config': {
+      'reserve': true
+    },
+    'row-config': {
+      keyField: 'id'
+    }
   },
   page: {
     current: 1,
-    size: 50
+    size: 50,
+    pageSizes: [10, 20, 100, { label: '大量数据', value: 1000 }]
   },
   showPage: true,
   operateColumn: true,
-  operateFixed: true,
+  operateFixed: 'true',
   operateWidth: '120',
   total: 999,
   loading: false
 })
 
-const { getListData } = useTableData(table, tableData, page, ({ size }) => findList(size), tabVal)
-const searchEvent = (...params) => {
-  console.log('searchEvent', params
-  );
-}
+const { getListData, searchEvent, scrollLoad } = useTableData(table, tableData, page, ({ current, size }) => findList(current, size), tabVal)
 getList = (flag) => { getListData(flag) }
 
 const setTh = (tab: string) => {
   const th = [
     { field: 'checkbox', width: 50, type: 'checkbox' },
     { field: 'id', title: '编号', handleClickShow: false },
-    { field: 'name', title: '姓名', show: tab === tabVal.value },
+    { field: 'name', title: '姓名', show: tab === tabs[0].name },
     { field: 'role', title: '角色' },
     { field: 'age', title: '年龄' },
   ] as ITableTh[]
@@ -79,13 +106,15 @@ const setTh = (tab: string) => {
 setTh(tabVal.value)
 
 
-function findList(size) {
+function findList(current, size) {
+  console.log('调用了！');
+
   return new Promise(resolve => {
     setTimeout(() => {
       var list = []
       for (var index = 0; index < size; index++) {
         list.push({
-          id: 100000 + index,
+          id: 100000 + current + index,
           name: 'admin' + index,
           role: '前端开发',
           age: 10 + index,
@@ -100,15 +129,15 @@ function findList(size) {
 }
 
 function colspanMethod({ _rowIndex, columnIndex }) {
-  if (_rowIndex === 0) {
-    if (columnIndex === 3) {
-      return { rowspan: 3, colspan: 1 }
-    }
-  } else if (_rowIndex === 1 || _rowIndex === 2) {
-    if (columnIndex === 3) {
-      return { rowspan: 1, colspan: 0 }
-    }
-  }
+  // if (_rowIndex === 0) {
+  //   if (columnIndex === 3) {
+  //     return { rowspan: 3, colspan: 1 }
+  //   }
+  // } else if (_rowIndex === 1 || _rowIndex === 2) {
+  //   if (columnIndex === 3) {
+  //     return { rowspan: 1, colspan: 0 }
+  //   }
+  // }
   // if (_rowIndex % 2 === 0) {
   //   if (columnIndex === 2) {
   //     return { rowspan: 1, colspan: 3 }
@@ -132,10 +161,13 @@ onMounted(() => {
     </nx-tabs>
     <nx-filter @filterChange="filterChange" :btnList="funBtns" :screenData="screenData" v-model:page="page">
     </nx-filter>
-    <div style="height: calc(100% - 210px)">
+    <div style="height: calc(100% - 238px)">
       <nx-table @searchEvent="searchEvent" ref="table" v-bind="tableData" @handleClick="handleClick" class="table">
         <template #toolBarBtns>
-          <el-button size="mini" @click="() => { }">功能1</el-button>
+          <el-button size="small" @click="() => { tableData.tr = [] }">功能1</el-button>
+          <el-button size="small" @click="() => { tableData.tr = [] }">功能1</el-button>
+          <el-button size="small" @click="() => { tableData.tr = [] }">功能1</el-button>
+          <el-button size="small" @click="() => { tableData.tr = [] }">功能1</el-button>
         </template>
         <template #operate_slot="scope">
           <div>
