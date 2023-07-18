@@ -4,6 +4,7 @@ import db from './db/db'
 import Filter from './filter'
 import Tabs from './tabs'
 import Table from './table'
+import Request from './request'
 
 import { useTableData } from './utils'
 
@@ -31,4 +32,5 @@ if (typeof window !== 'undefined') {
 
 const Nxui = { install }
 
-export { Nxui, db, useTableData }
+export { Filter, Tabs, Table }
+export { Nxui, db, useTableData, Request }
