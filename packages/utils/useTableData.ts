@@ -74,7 +74,7 @@ export default function useTableData(
   }
   let handleResultData
 
-  const getListData = async (flag = false, pagination = false, fn = (res: any) => res?.data) => {
+  const getListData = async (flag = false, pagination = false, fn = (res: any) => res) => {
     handleResultData = fn
     let fetchData
     if (isMultipleOptions) {
