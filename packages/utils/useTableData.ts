@@ -11,7 +11,6 @@ interface TableData {
 
 // 定义一个接口，用于描述参数对象的类型
 interface Params {
-  current: number // 当前页码
   [key: string]: any // 其他任意属性
 }
 
@@ -61,7 +60,7 @@ function useData(data: Ref<string>) {
  * @returns 返回getListData和scrollLoad两个异步函数
  */
 export default function useTableData(
-  table: NxTableInstance,
+  table: Ref<NxTableInstance>,
   tableData: TableData,
   params: Params,
   interfaces: Record<string, FetchFunction> | FetchFunction,
