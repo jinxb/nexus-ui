@@ -2,7 +2,7 @@
 import { onMounted, reactive, ref } from 'vue';
 import type { NxTableProps, ITableTh, NxTableInstance }
   from '@jinxb/nexus-ui';
-import { useTableData } from '@jinxb/nexus-ui';
+import { useTableData } from '../../packages/utils';
 import NxTable from '../../packages/table/src/table.vue';
 
 import { tabs, page, screenData, funBtns } from './config';
@@ -83,10 +83,10 @@ const tableData: NxTableProps = reactive({
   },
   showPage: true,
   operateColumn: true,
-  operateFixed: 'true',
-  operateWidth: '120',
+  operateFixed: true,
+  operateWidth: 150,
   total: 999,
-  loading: false
+  loading: true
 })
 
 const { getListData, searchEvent, scrollLoad } = useTableData(table, tableData, page, ({ current, size }) => findList(current, size), tabVal)
@@ -94,11 +94,30 @@ getList = (flag) => { getListData(flag) }
 
 const setTh = (tab: string) => {
   const th = [
-    { field: 'checkbox', width: 50, type: 'checkbox' },
+    { field: 'checkbox', width: 50, type: 'checkbox', fixed: 'left', },
     { field: 'id', title: '编号', handleClickShow: false },
     { field: 'name', title: '姓名', show: tab === tabs[0].name },
     { field: 'role', title: '角色' },
-    { field: 'age', title: '年龄' },
+    { field: 'age', title: '年龄9' },
+    { field: 'age', title: '年龄8' },
+    { field: 'age', title: '年龄7' },
+    { field: 'age', minWidth: 50, title: '年龄6' },
+    { field: 'age', title: '年龄5' },
+    { field: 'age', title: '年龄8' },
+    // { field: 'age', title: '年龄7' },
+    // { field: 'age', title: '年龄6' },
+    // { field: 'age', title: '年龄5' },
+    // { field: 'age', title: '年龄8' },
+    // { field: 'age', title: '年龄7' },
+    // { field: 'age', title: '年龄6' },
+    // { field: 'age', title: '年龄5' },
+    // { field: 'age', title: '年龄8' },
+    // { field: 'age', title: '年龄7' },
+    // { field: 'age', title: '年龄6' },
+    // { field: 'age', title: '年龄5' },
+    // { field: 'age', title: '年龄5' },
+    // { field: 'age', title: '年龄5' },
+    // { field: 'age', title: '年龄5' },
   ] as ITableTh[]
   tableData.th = th
   tableData.cacheKey = 'Nx-table' + tab
@@ -146,7 +165,7 @@ function colspanMethod({ _rowIndex, columnIndex }) {
   //   }
   // }
 }
-
+let a = 0
 const handleClick = (scope) => {
   console.log('111111', scope);
 }
@@ -161,8 +180,9 @@ onMounted(() => {
     </nx-tabs>
     <nx-filter @filterChange="filterChange" :btnList="funBtns" :screenData="screenData" v-model:page="page">
     </nx-filter>
-    <div style="height: calc(100% - 238px)">
-      <nx-table @searchEvent="searchEvent" ref="table" v-bind="tableData" @handleClick="handleClick" class="table">
+    <div style="height: calc(100% - 200px)">
+      <nx-table @searchEvent="searchEvent" ref="table" v-bind="tableData" @handleClick="handleClick" class="table"
+        @scrollLoad="scrollLoad">
         <template #toolBarBtns>
           <el-button size="small" @click="() => { tableData.tr = [] }">功能1</el-button>
           <el-button size="small" @click="() => { tableData.tr = [] }">功能1</el-button>

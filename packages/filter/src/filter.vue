@@ -72,7 +72,7 @@ const handleQuery = () => {
     <div class="form-search">
       <template v-for="(item, index) in props.screenData" :key="index">
         <div class="form-block">
-          <div class="form-block-label" :style="{ width: (item.width || 130) + 'px' }">
+          <div class="form-block-label" :style="{ width: (item.labelWidth || 130) + 'px' }">
             <span class="label" v-if="item.label">{{ item.label }}</span>
           </div>
           <el-select :style="{ width: (item.width || 240) + 'px !important' }" v-bind="item" :clearable="item.clearable"

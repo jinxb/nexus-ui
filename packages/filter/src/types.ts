@@ -20,9 +20,7 @@ export interface IScreenData {
   key: string
   placeholder?: string
   width?: string
+  labelWidth?: string
   clearable?: boolean
-  options?: {
-    label: string
-    value: string
-  }[]
+  options?: Record<string, string>[]
 }

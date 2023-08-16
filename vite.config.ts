@@ -37,7 +37,8 @@ export default defineConfig({
       external: ['vue', 'element-plus', 'vxe-table'],
       output: {
         globals: {
-          vue: 'vue'
+          vue: 'vue',
+          'element-plus': 'elementPlus'
         }
       }
     },

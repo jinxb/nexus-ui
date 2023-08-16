@@ -25,6 +25,7 @@ const screenData = reactive([
     type: 'select',
     key: 'select',
     placeholder: '111',
+    labelWidth: '100',
     options: [
       {
         label: '1',
@@ -39,25 +40,30 @@ const screenData = reactive([
   {
     label: '商品编码',
     type: 'date',
+    labelWidth: '100',
     key: 'date'
   },
   {
     label: '仓库名称',
+    labelWidth: '100',
     type: 'input',
     key: 'inputVal1'
   },
   {
     label: '仓库名称2',
+    labelWidth: '100',
     type: 'input',
     key: 'inputVa22'
   },
   {
     label: '仓库名称3',
+    labelWidth: '100',
     type: 'input',
     key: 'inputVa33'
   },
   {
     label: '仓库名称4',
+    labelWidth: '100',
     type: 'input',
     key: 'inputVa44'
   }
@@ -66,7 +72,7 @@ const screenData = reactive([
 const funBtns = reactive([
   {
     name: '按钮1按钮1按钮1',
-    show: true,
+    show: false,
     cb: () => () => {
       console.log('按钮1按钮1按钮1')
     }

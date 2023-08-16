@@ -18,6 +18,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
     "@jinxb/nexus-ui": "^1.5.7",
+    "axios": "^1.4.0",
     "element-plus": "^1.0.2-beta.59",
     "pinia": "^2.0.32",
     "sass": "^1.62.0",
